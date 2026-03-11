@@ -1,0 +1,22 @@
+{% if page.tex_macros %}
+<div style="display: none">
+$$
+{{ page.tex_macros -}}
+$$
+</div>
+{% endif %}
+
+<header class="site-header" role="banner">
+  <div class="wrapper">
+    {%- assign default_paths = site.pages | map: "path" -%}
+    {% if page.name == "index.md" %}
+    <span class="site-title">{{ site.title }}</span>
+    {% else %}
+    <a class="site-title" rel="author" href="../index.html">{{ site.title }}</a>
+    {% endif %}
+
+    <nav class="site-nav">
+      <a href="https://agda.readthedocs.io/en/latest/">AGDA DOCS</a>
+    </nav>
+  </div>
+</header>

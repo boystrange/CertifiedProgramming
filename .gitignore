@@ -1,0 +1,12 @@
+*~
+.jekyll*
+_site
+.DS_Store
+assets/pdf
+*.zip
+vendor
+.bundle
+pages
+*.agdai
+ProVer
+Gemfile.lock

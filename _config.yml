@@ -1,0 +1,41 @@
+title: Lecture Notes on Certified Programming in Agda
+theme: minima
+baseurl: /CertifiedProgramming
+
+include: ["_pages"]
+
+exclude:
+  - Makefile
+  - "*.zip"
+  - "*.dot"
+  - "*.agdai"
+  - "*.sh"
+  - old
+  - src
+  - "*.pdf"
+  - vendor
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - TODO.md
+  - insert.sed
+
+# - scope:
+#      path: "" # all files in the project
+#    values:
+#      layout: "page"
+
+defaults:
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      permalink: /:basename
+
+kramdown:
+  parse_block_html: true
+  toc_levels: "1"
+  math_engine: mathjax
+
+mathjax_url: 'https://cdn.jsdelivr.net/npm/mathjax@3'
+custom_font: true
