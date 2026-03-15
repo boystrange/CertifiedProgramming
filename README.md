@@ -1,7 +1,7 @@
-# Program Verification in Agda
+# Certified Programming
 
-* 42 hours
-* 21 lectures
+* 30 hours
+* 12 lectures
 * Inspiration from [Peter Selinger's lectures on
   Agda](https://www.mathstat.dal.ca/~selinger/agda-lectures/)
 * [PLFA](https://plfa.github.io)
@@ -12,7 +12,7 @@
 
 1. Defining Agda functions, using the interactive environment
 2. Inductive types, pattern matching (Bool, not/and/or)
-3. Using equaility and `refl`, dependent arrow type (properties of
+3. Using equality and `refl`, dependent arrow type (properties of
    booleans, not is an involution, and/or are commutative, etc.)
 4. Recursive inductive types, recursive functions (natural numbers,
    addition, multiplication, etc.)
