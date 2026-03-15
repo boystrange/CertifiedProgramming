@@ -8,14 +8,13 @@ next:  Chapter.Intro.Bool
 ## Imports
 
 To try out the examples discussed in this chapter and to solve the
-proposed exercises it is necessary to import the `Nat` module, which
-defines the natural numbers and some basic operations on them. We
-will see how natural numbers are defined in a [dedicated
-chapter](Chapter.Intro.NaturalNumbers.html). For the time being, we
-simply import the module and make its content accessible by means of
-the following clause.
+proposed exercises it is necessary to import the `Data.Nat` module,
+which defines the natural numbers and some basic operations on
+them. We will see how natural numbers are defined in a future
+chapter. For the time being, we simply import the module and make
+its content accessible by means of the following clause.
 
-<pre class="Agda"><a id="541" class="Keyword">open</a> <a id="546" class="Keyword">import</a> <a id="553" href="Data.Nat.html" class="Module">Data.Nat</a>
+<pre class="Agda"><a id="506" class="Keyword">open</a> <a id="511" class="Keyword">import</a> <a id="518" href="Data.Nat.html" class="Module">Data.Nat</a>
 </pre>
 ## Simple types
 
@@ -46,7 +45,7 @@ where
   computes the result of applying the function to its argument.
 
 Below are a few simple examples of functions that make use of types
-and operators defined in the `Nat` module:
+and operators defined in the `Data.Nat` module:
 
 * `λ (x : ℕ) -> x` is the identity function for natural numbers;
 * `λ (x : ℕ) -> x + 1` is the successor function for natural numbers;
@@ -58,12 +57,13 @@ natural number as argument (the `ℕ` to the lhs of `->`) and produce
 a natural number as result (the `ℕ` to the rhs of `->`).  The type
 annotation of the argument can be omitted when its type can be
 inferred from the context. For example, since the `+` and `^`
-operators defined in the `Nat` module can only be applied to natural
-numbers, the last two functions above can be more concisely written
-as `λ x -> x + 1` and `λ x -> x ^ 2 + 1` respectively. We can verify
-this by asking Agda to compute the type of these functions. This is
-achieved by typing `C-c C-d` followed by the function (more
-generally the term) for which we want Agda to infer the type.
+operators defined in the `Data.Nat` module can only be applied to
+natural numbers, the last two functions above can be more concisely
+written as `λ x -> x + 1` and `λ x -> x ^ 2 + 1` respectively. We
+can verify this by asking Agda to compute the type of these
+functions. This is achieved by typing `C-c C-d` followed by the
+function (more generally the term) for which we want Agda to infer
+the type.
 
 All the examples above define **anonymous functions**, functions
 without a name that are defined "on the spot", wherever we need. It
@@ -75,8 +75,8 @@ specify their type. For example, the program containing the
 following two lines specify that `f` is a function of type `ℕ -> ℕ`
 that maps $x$ to $x^2 + 1$:
 
-<pre class="Agda"><a id="f"></a><a id="3278" href="Chapter.Intro.Lambda.html#3278" class="Function">f</a> <a id="3280" class="Symbol">:</a> <a id="3282" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="3284" class="Symbol">-&gt;</a> <a id="3287" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="3289" href="Chapter.Intro.Lambda.html#3278" class="Function">f</a> <a id="3291" class="Symbol">=</a> <a id="3293" class="Symbol">λ</a> <a id="3295" href="Chapter.Intro.Lambda.html#3295" class="Bound">x</a> <a id="3297" class="Symbol">-&gt;</a> <a id="3300" href="Chapter.Intro.Lambda.html#3295" class="Bound">x</a> <a id="3302" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="3304" class="Number">2</a> <a id="3306" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="3308" class="Number">1</a>
+<pre class="Agda"><a id="f"></a><a id="3253" href="Chapter.Intro.Lambda.html#3253" class="Function">f</a> <a id="3255" class="Symbol">:</a> <a id="3257" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="3259" class="Symbol">-&gt;</a> <a id="3262" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="3264" href="Chapter.Intro.Lambda.html#3253" class="Function">f</a> <a id="3266" class="Symbol">=</a> <a id="3268" class="Symbol">λ</a> <a id="3270" href="Chapter.Intro.Lambda.html#3270" class="Bound">x</a> <a id="3272" class="Symbol">-&gt;</a> <a id="3275" href="Chapter.Intro.Lambda.html#3270" class="Bound">x</a> <a id="3277" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="3279" class="Number">2</a> <a id="3281" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="3283" class="Number">1</a>
 </pre>
 The first line provides the **signature** of `f`. Top-level
 definitions like this one must always be accompanied by a
@@ -100,8 +100,8 @@ convenient notation with which argument and body of the function are
 separated by the symbol `=` . For example, an equivalent way of
 defining `f` is
 
-<pre class="Agda"><a id="f₁"></a><a id="4485" href="Chapter.Intro.Lambda.html#4485" class="Function">f₁</a> <a id="4488" class="Symbol">:</a> <a id="4490" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="4492" class="Symbol">-&gt;</a> <a id="4495" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="4497" href="Chapter.Intro.Lambda.html#4485" class="Function">f₁</a> <a id="4500" href="Chapter.Intro.Lambda.html#4500" class="Bound">x</a> <a id="4502" class="Symbol">=</a> <a id="4504" href="Chapter.Intro.Lambda.html#4500" class="Bound">x</a> <a id="4506" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="4508" class="Number">2</a> <a id="4510" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="4512" class="Number">1</a>
+<pre class="Agda"><a id="f₁"></a><a id="4460" href="Chapter.Intro.Lambda.html#4460" class="Function">f₁</a> <a id="4463" class="Symbol">:</a> <a id="4465" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="4467" class="Symbol">-&gt;</a> <a id="4470" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="4472" href="Chapter.Intro.Lambda.html#4460" class="Function">f₁</a> <a id="4475" href="Chapter.Intro.Lambda.html#4475" class="Bound">x</a> <a id="4477" class="Symbol">=</a> <a id="4479" href="Chapter.Intro.Lambda.html#4475" class="Bound">x</a> <a id="4481" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="4483" class="Number">2</a> <a id="4485" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="4487" class="Number">1</a>
 </pre>
 which can be read as "`f₁` applied to `x` is equal to `x ^ 2 +
 1`". We have named this alternative definition of the function `f₁`
@@ -147,8 +147,9 @@ conventions concerning function definitions and applications:
   `M₁ M₂ M₃` stands for `(M₁ M₂) M₃` and not for `M₁ (M₂ M₃)`.
 
 We will introduce new terms in the following chapters. For the time
-being, since we have imported the `Nat` module from the library, a
-number of terms defined therein are also available. In particular:
+being, since we have imported the `Data.Nat` module from the
+library, a number of terms defined therein are also available. In
+particular:
 
 * `zero` of type `ℕ` represents the natural number zero;
 * `suc` of type `ℕ -> ℕ` is a function that, applied to a natural
@@ -180,13 +181,13 @@ language like Agda is by means of functions that yield other
 functions as result. For example, `g` below is defined as a function
 that maps $x$ to a function that maps $y$ to $x^2 + 2xy + 1$.
 
-<pre class="Agda"><a id="g"></a><a id="8273" href="Chapter.Intro.Lambda.html#8273" class="Function">g</a> <a id="8275" class="Symbol">:</a> <a id="8277" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8279" class="Symbol">-&gt;</a> <a id="8282" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8284" class="Symbol">-&gt;</a> <a id="8287" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="8289" href="Chapter.Intro.Lambda.html#8273" class="Function">g</a> <a id="8291" class="Symbol">=</a> <a id="8293" class="Symbol">λ</a> <a id="8295" href="Chapter.Intro.Lambda.html#8295" class="Bound">x</a> <a id="8297" class="Symbol">-&gt;</a> <a id="8300" class="Symbol">λ</a> <a id="8302" href="Chapter.Intro.Lambda.html#8302" class="Bound">y</a> <a id="8304" class="Symbol">-&gt;</a> <a id="8307" href="Chapter.Intro.Lambda.html#8295" class="Bound">x</a> <a id="8309" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="8311" class="Number">2</a> <a id="8313" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8315" class="Number">2</a> <a id="8317" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8319" href="Chapter.Intro.Lambda.html#8295" class="Bound">x</a> <a id="8321" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8323" href="Chapter.Intro.Lambda.html#8302" class="Bound">y</a> <a id="8325" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8327" class="Number">1</a>
+<pre class="Agda"><a id="g"></a><a id="8253" href="Chapter.Intro.Lambda.html#8253" class="Function">g</a> <a id="8255" class="Symbol">:</a> <a id="8257" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8259" class="Symbol">-&gt;</a> <a id="8262" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8264" class="Symbol">-&gt;</a> <a id="8267" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="8269" href="Chapter.Intro.Lambda.html#8253" class="Function">g</a> <a id="8271" class="Symbol">=</a> <a id="8273" class="Symbol">λ</a> <a id="8275" href="Chapter.Intro.Lambda.html#8275" class="Bound">x</a> <a id="8277" class="Symbol">-&gt;</a> <a id="8280" class="Symbol">λ</a> <a id="8282" href="Chapter.Intro.Lambda.html#8282" class="Bound">y</a> <a id="8284" class="Symbol">-&gt;</a> <a id="8287" href="Chapter.Intro.Lambda.html#8275" class="Bound">x</a> <a id="8289" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="8291" class="Number">2</a> <a id="8293" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8295" class="Number">2</a> <a id="8297" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8299" href="Chapter.Intro.Lambda.html#8275" class="Bound">x</a> <a id="8301" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8303" href="Chapter.Intro.Lambda.html#8282" class="Bound">y</a> <a id="8305" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8307" class="Number">1</a>
 </pre>
 Equivalently, `g` can be written as follows:
 
-<pre class="Agda"><a id="g₁"></a><a id="8384" href="Chapter.Intro.Lambda.html#8384" class="Function">g₁</a> <a id="8387" class="Symbol">:</a> <a id="8389" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8391" class="Symbol">-&gt;</a> <a id="8394" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8396" class="Symbol">-&gt;</a> <a id="8399" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="8401" href="Chapter.Intro.Lambda.html#8384" class="Function">g₁</a> <a id="8404" href="Chapter.Intro.Lambda.html#8404" class="Bound">x</a> <a id="8406" href="Chapter.Intro.Lambda.html#8406" class="Bound">y</a> <a id="8408" class="Symbol">=</a> <a id="8410" href="Chapter.Intro.Lambda.html#8404" class="Bound">x</a> <a id="8412" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="8414" class="Number">2</a> <a id="8416" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8418" class="Number">2</a> <a id="8420" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8422" href="Chapter.Intro.Lambda.html#8404" class="Bound">x</a> <a id="8424" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8426" href="Chapter.Intro.Lambda.html#8406" class="Bound">y</a> <a id="8428" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8430" class="Number">1</a>
+<pre class="Agda"><a id="g₁"></a><a id="8364" href="Chapter.Intro.Lambda.html#8364" class="Function">g₁</a> <a id="8367" class="Symbol">:</a> <a id="8369" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8371" class="Symbol">-&gt;</a> <a id="8374" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8376" class="Symbol">-&gt;</a> <a id="8379" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="8381" href="Chapter.Intro.Lambda.html#8364" class="Function">g₁</a> <a id="8384" href="Chapter.Intro.Lambda.html#8384" class="Bound">x</a> <a id="8386" href="Chapter.Intro.Lambda.html#8386" class="Bound">y</a> <a id="8388" class="Symbol">=</a> <a id="8390" href="Chapter.Intro.Lambda.html#8384" class="Bound">x</a> <a id="8392" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="8394" class="Number">2</a> <a id="8396" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8398" class="Number">2</a> <a id="8400" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8402" href="Chapter.Intro.Lambda.html#8384" class="Bound">x</a> <a id="8404" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="8406" href="Chapter.Intro.Lambda.html#8386" class="Bound">y</a> <a id="8408" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="8410" class="Number">1</a>
 </pre>
 We can use `C-c C-n` to verify that `g 2 3` evaluates to `17`. Since
 function application is left associative, `g 2 3` is the same as `(g
@@ -201,8 +202,8 @@ As in most functional programming languages, functions are
 first-class entities that can be provided as arguments and returned
 as results of other functions. For example, the function
 
-<pre class="Agda"><a id="twice"></a><a id="8953" href="Chapter.Intro.Lambda.html#8953" class="Function">twice</a> <a id="8959" class="Symbol">:</a> <a id="8961" class="Symbol">(</a><a id="8962" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8964" class="Symbol">-&gt;</a> <a id="8967" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a><a id="8968" class="Symbol">)</a> <a id="8970" class="Symbol">-&gt;</a> <a id="8973" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8975" class="Symbol">-&gt;</a> <a id="8978" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="8980" href="Chapter.Intro.Lambda.html#8953" class="Function">twice</a> <a id="8986" href="Chapter.Intro.Lambda.html#8986" class="Bound">f</a> <a id="8988" href="Chapter.Intro.Lambda.html#8988" class="Bound">x</a> <a id="8990" class="Symbol">=</a> <a id="8992" href="Chapter.Intro.Lambda.html#8986" class="Bound">f</a> <a id="8994" class="Symbol">(</a><a id="8995" href="Chapter.Intro.Lambda.html#8986" class="Bound">f</a> <a id="8997" href="Chapter.Intro.Lambda.html#8988" class="Bound">x</a><a id="8998" class="Symbol">)</a>
+<pre class="Agda"><a id="twice"></a><a id="8933" href="Chapter.Intro.Lambda.html#8933" class="Function">twice</a> <a id="8939" class="Symbol">:</a> <a id="8941" class="Symbol">(</a><a id="8942" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8944" class="Symbol">-&gt;</a> <a id="8947" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a><a id="8948" class="Symbol">)</a> <a id="8950" class="Symbol">-&gt;</a> <a id="8953" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="8955" class="Symbol">-&gt;</a> <a id="8958" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="8960" href="Chapter.Intro.Lambda.html#8933" class="Function">twice</a> <a id="8966" href="Chapter.Intro.Lambda.html#8966" class="Bound">f</a> <a id="8968" href="Chapter.Intro.Lambda.html#8968" class="Bound">x</a> <a id="8970" class="Symbol">=</a> <a id="8972" href="Chapter.Intro.Lambda.html#8966" class="Bound">f</a> <a id="8974" class="Symbol">(</a><a id="8975" href="Chapter.Intro.Lambda.html#8966" class="Bound">f</a> <a id="8977" href="Chapter.Intro.Lambda.html#8968" class="Bound">x</a><a id="8978" class="Symbol">)</a>
 </pre>
 applied to a function `f` and an argument `x` applies `f` to `x`
 twice. Evaluating `twice f 2` where `f` is the function defined
@@ -224,31 +225,31 @@ above yields `26`.
    * `λ (x : ℕ -> ℕ -> ℕ) (y : ℕ) -> x (x y)`
    * `λ (x : ℕ -> ℕ -> ℕ) (y : ℕ) -> x y y`
 
-<pre class="Agda"><a id="9803" class="Comment">-- EXERCISE 1</a>
+<pre class="Agda"><a id="9783" class="Comment">-- EXERCISE 1</a>
 
-<a id="suc₁"></a><a id="9818" href="Chapter.Intro.Lambda.html#9818" class="Function">suc₁</a> <a id="9823" class="Symbol">:</a> <a id="9825" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9827" class="Symbol">-&gt;</a> <a id="9830" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="9832" href="Chapter.Intro.Lambda.html#9818" class="Function">suc₁</a> <a id="9837" class="Symbol">=</a> <a id="9839" href="Agda.Builtin.Nat.html#234" class="InductiveConstructor">suc</a>
+<a id="suc₁"></a><a id="9798" href="Chapter.Intro.Lambda.html#9798" class="Function">suc₁</a> <a id="9803" class="Symbol">:</a> <a id="9805" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9807" class="Symbol">-&gt;</a> <a id="9810" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="9812" href="Chapter.Intro.Lambda.html#9798" class="Function">suc₁</a> <a id="9817" class="Symbol">=</a> <a id="9819" href="Agda.Builtin.Nat.html#234" class="InductiveConstructor">suc</a>
 
-<a id="suc₂"></a><a id="9844" href="Chapter.Intro.Lambda.html#9844" class="Function">suc₂</a> <a id="9849" class="Symbol">:</a> <a id="9851" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9853" class="Symbol">-&gt;</a> <a id="9856" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="9858" href="Chapter.Intro.Lambda.html#9844" class="Function">suc₂</a> <a id="9863" href="Chapter.Intro.Lambda.html#9863" class="Bound">x</a> <a id="9865" class="Symbol">=</a> <a id="9867" href="Agda.Builtin.Nat.html#234" class="InductiveConstructor">suc</a> <a id="9871" href="Chapter.Intro.Lambda.html#9863" class="Bound">x</a>
+<a id="suc₂"></a><a id="9824" href="Chapter.Intro.Lambda.html#9824" class="Function">suc₂</a> <a id="9829" class="Symbol">:</a> <a id="9831" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9833" class="Symbol">-&gt;</a> <a id="9836" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="9838" href="Chapter.Intro.Lambda.html#9824" class="Function">suc₂</a> <a id="9843" href="Chapter.Intro.Lambda.html#9843" class="Bound">x</a> <a id="9845" class="Symbol">=</a> <a id="9847" href="Agda.Builtin.Nat.html#234" class="InductiveConstructor">suc</a> <a id="9851" href="Chapter.Intro.Lambda.html#9843" class="Bound">x</a>
 
-<a id="suc₃"></a><a id="9874" href="Chapter.Intro.Lambda.html#9874" class="Function">suc₃</a> <a id="9879" class="Symbol">:</a> <a id="9881" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9883" class="Symbol">-&gt;</a> <a id="9886" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="9888" href="Chapter.Intro.Lambda.html#9874" class="Function">suc₃</a> <a id="9893" class="Symbol">=</a> <a id="9895" class="Symbol">λ</a> <a id="9897" href="Chapter.Intro.Lambda.html#9897" class="Bound">x</a> <a id="9899" class="Symbol">-&gt;</a> <a id="9902" href="Chapter.Intro.Lambda.html#9897" class="Bound">x</a> <a id="9904" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="9906" class="Number">1</a>
+<a id="suc₃"></a><a id="9854" href="Chapter.Intro.Lambda.html#9854" class="Function">suc₃</a> <a id="9859" class="Symbol">:</a> <a id="9861" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9863" class="Symbol">-&gt;</a> <a id="9866" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="9868" href="Chapter.Intro.Lambda.html#9854" class="Function">suc₃</a> <a id="9873" class="Symbol">=</a> <a id="9875" class="Symbol">λ</a> <a id="9877" href="Chapter.Intro.Lambda.html#9877" class="Bound">x</a> <a id="9879" class="Symbol">-&gt;</a> <a id="9882" href="Chapter.Intro.Lambda.html#9877" class="Bound">x</a> <a id="9884" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="9886" class="Number">1</a>
 
-<a id="suc₄"></a><a id="9909" href="Chapter.Intro.Lambda.html#9909" class="Function">suc₄</a> <a id="9914" class="Symbol">:</a> <a id="9916" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9918" class="Symbol">-&gt;</a> <a id="9921" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="9923" href="Chapter.Intro.Lambda.html#9909" class="Function">suc₄</a> <a id="9928" class="Symbol">=</a> <a id="9930" class="Symbol">λ</a> <a id="9932" href="Chapter.Intro.Lambda.html#9932" class="Bound">x</a> <a id="9934" class="Symbol">-&gt;</a> <a id="9937" class="Number">1</a> <a id="9939" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="9941" href="Chapter.Intro.Lambda.html#9932" class="Bound">x</a>
+<a id="suc₄"></a><a id="9889" href="Chapter.Intro.Lambda.html#9889" class="Function">suc₄</a> <a id="9894" class="Symbol">:</a> <a id="9896" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9898" class="Symbol">-&gt;</a> <a id="9901" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="9903" href="Chapter.Intro.Lambda.html#9889" class="Function">suc₄</a> <a id="9908" class="Symbol">=</a> <a id="9910" class="Symbol">λ</a> <a id="9912" href="Chapter.Intro.Lambda.html#9912" class="Bound">x</a> <a id="9914" class="Symbol">-&gt;</a> <a id="9917" class="Number">1</a> <a id="9919" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="9921" href="Chapter.Intro.Lambda.html#9912" class="Bound">x</a>
 
-<a id="suc₅"></a><a id="9944" href="Chapter.Intro.Lambda.html#9944" class="Function">suc₅</a> <a id="9949" class="Symbol">:</a> <a id="9951" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9953" class="Symbol">-&gt;</a> <a id="9956" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="9958" href="Chapter.Intro.Lambda.html#9944" class="Function">suc₅</a> <a id="9963" href="Chapter.Intro.Lambda.html#9963" class="Bound">x</a> <a id="9965" class="Symbol">=</a> <a id="9967" href="Chapter.Intro.Lambda.html#9963" class="Bound">x</a> <a id="9969" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="9971" class="Number">1</a>
+<a id="suc₅"></a><a id="9924" href="Chapter.Intro.Lambda.html#9924" class="Function">suc₅</a> <a id="9929" class="Symbol">:</a> <a id="9931" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9933" class="Symbol">-&gt;</a> <a id="9936" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="9938" href="Chapter.Intro.Lambda.html#9924" class="Function">suc₅</a> <a id="9943" href="Chapter.Intro.Lambda.html#9943" class="Bound">x</a> <a id="9945" class="Symbol">=</a> <a id="9947" href="Chapter.Intro.Lambda.html#9943" class="Bound">x</a> <a id="9949" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="9951" class="Number">1</a>
 
-<a id="suc₆"></a><a id="9974" href="Chapter.Intro.Lambda.html#9974" class="Function">suc₆</a> <a id="9979" class="Symbol">:</a> <a id="9981" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9983" class="Symbol">-&gt;</a> <a id="9986" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="9988" href="Chapter.Intro.Lambda.html#9974" class="Function">suc₆</a> <a id="9993" href="Chapter.Intro.Lambda.html#9993" class="Bound">x</a> <a id="9995" class="Symbol">=</a> <a id="9997" class="Number">1</a> <a id="9999" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="10001" href="Chapter.Intro.Lambda.html#9993" class="Bound">x</a>
+<a id="suc₆"></a><a id="9954" href="Chapter.Intro.Lambda.html#9954" class="Function">suc₆</a> <a id="9959" class="Symbol">:</a> <a id="9961" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="9963" class="Symbol">-&gt;</a> <a id="9966" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="9968" href="Chapter.Intro.Lambda.html#9954" class="Function">suc₆</a> <a id="9973" href="Chapter.Intro.Lambda.html#9973" class="Bound">x</a> <a id="9975" class="Symbol">=</a> <a id="9977" class="Number">1</a> <a id="9979" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="9981" href="Chapter.Intro.Lambda.html#9973" class="Bound">x</a>
 
-<a id="10004" class="Comment">-- EXERCISE 2</a>
+<a id="9984" class="Comment">-- EXERCISE 2</a>
 
-<a id="poly₂"></a><a id="10019" href="Chapter.Intro.Lambda.html#10019" class="Function">poly₂</a> <a id="10025" class="Symbol">:</a> <a id="10027" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="10029" class="Symbol">-&gt;</a> <a id="10032" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="10034" href="Chapter.Intro.Lambda.html#10019" class="Function">poly₂</a> <a id="10040" href="Chapter.Intro.Lambda.html#10040" class="Bound">x</a> <a id="10042" class="Symbol">=</a> <a id="10044" class="Number">2</a> <a id="10046" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="10048" href="Chapter.Intro.Lambda.html#10040" class="Bound">x</a> <a id="10050" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="10052" class="Number">2</a>
+<a id="poly₂"></a><a id="9999" href="Chapter.Intro.Lambda.html#9999" class="Function">poly₂</a> <a id="10005" class="Symbol">:</a> <a id="10007" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="10009" class="Symbol">-&gt;</a> <a id="10012" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="10014" href="Chapter.Intro.Lambda.html#9999" class="Function">poly₂</a> <a id="10020" href="Chapter.Intro.Lambda.html#10020" class="Bound">x</a> <a id="10022" class="Symbol">=</a> <a id="10024" class="Number">2</a> <a id="10026" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="10028" href="Chapter.Intro.Lambda.html#10020" class="Bound">x</a> <a id="10030" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="10032" class="Number">2</a>
 
-<a id="poly₃"></a><a id="10055" href="Chapter.Intro.Lambda.html#10055" class="Function">poly₃</a> <a id="10061" class="Symbol">:</a> <a id="10063" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="10065" class="Symbol">-&gt;</a> <a id="10068" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="10070" class="Symbol">-&gt;</a> <a id="10073" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
-<a id="10075" href="Chapter.Intro.Lambda.html#10055" class="Function">poly₃</a> <a id="10081" href="Chapter.Intro.Lambda.html#10081" class="Bound">x</a> <a id="10083" href="Chapter.Intro.Lambda.html#10083" class="Bound">y</a> <a id="10085" class="Symbol">=</a> <a id="10087" class="Number">2</a> <a id="10089" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="10091" class="Symbol">(</a><a id="10092" href="Chapter.Intro.Lambda.html#10081" class="Bound">x</a> <a id="10094" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="10096" class="Number">3</a> <a id="10098" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="10100" href="Chapter.Intro.Lambda.html#10083" class="Bound">y</a> <a id="10102" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="10104" class="Number">2</a><a id="10105" class="Symbol">)</a>
+<a id="poly₃"></a><a id="10035" href="Chapter.Intro.Lambda.html#10035" class="Function">poly₃</a> <a id="10041" class="Symbol">:</a> <a id="10043" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="10045" class="Symbol">-&gt;</a> <a id="10048" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a> <a id="10050" class="Symbol">-&gt;</a> <a id="10053" href="Agda.Builtin.Nat.html#203" class="Datatype">ℕ</a>
+<a id="10055" href="Chapter.Intro.Lambda.html#10035" class="Function">poly₃</a> <a id="10061" href="Chapter.Intro.Lambda.html#10061" class="Bound">x</a> <a id="10063" href="Chapter.Intro.Lambda.html#10063" class="Bound">y</a> <a id="10065" class="Symbol">=</a> <a id="10067" class="Number">2</a> <a id="10069" href="Agda.Builtin.Nat.html#539" class="Primitive Operator">*</a> <a id="10071" class="Symbol">(</a><a id="10072" href="Chapter.Intro.Lambda.html#10061" class="Bound">x</a> <a id="10074" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="10076" class="Number">3</a> <a id="10078" href="Agda.Builtin.Nat.html#336" class="Primitive Operator">+</a> <a id="10080" href="Chapter.Intro.Lambda.html#10063" class="Bound">y</a> <a id="10082" href="Data.Nat.Base.html#6567" class="Function Operator">^</a> <a id="10084" class="Number">2</a><a id="10085" class="Symbol">)</a>
 </pre>{:.solution}

@@ -1,10 +1,10 @@
 ---
 title: Setup
-prev:  Chapter.Preamble.Demo
+prev:  Chapter.Prologue.Demo
 ---
 
 <!--
-<pre class="Agda"><a id="65" class="Keyword">module</a> <a id="72" href="Chapter.Preamble.Setup.html" class="Module">Chapter.Preamble.Setup</a> <a id="95" class="Keyword">where</a>
+<pre class="Agda"><a id="65" class="Keyword">module</a> <a id="72" href="Chapter.Prologue.Setup.html" class="Module">Chapter.Prologue.Setup</a> <a id="95" class="Keyword">where</a>
 </pre>-->
 
 The best way to use Agda requires the installation of a suitable
@@ -21,9 +21,9 @@ successful.
 Before following these instructions, it may be worth having a look
 at the [Agda
 documentation](https://agda.readthedocs.io/en/latest/getting-started/installation.html#prebuilt-packages)
-in case there are more up-to-date and/or specific installation
-procedures for your Operating System. In particular, Agda is known
-to work reasonably well also in combination with [Visual Studio
+for up-to-date and/or specific installation procedures for your
+Operating System. In particular, Agda is known to work reasonably
+well also in combination with [Visual Studio
 Code](https://code.visualstudio.com), which is a more
 "modern-looking" editor compared to Emacs.
 
@@ -87,7 +87,7 @@ which may or may not lead to problems.
 2. Install Emacs. In the terminal, enter the following:
 
    ```bash
-   brew install --cask --no-quarantine emacs
+   brew install --cask --no-quarantine emacs-mac
    ```
 
    Note: now you should be able to find Emacs in your `/Application`
@@ -180,9 +180,9 @@ To check that the installation was successful, create an empty file
 called `nat.agda` and open it in Emacs. Paste the following Agda
 code to the file.
 
-<pre class="Agda"><a id="6017" class="Keyword">data</a> <a id="Nat"></a><a id="6022" href="Chapter.Preamble.Setup.html#6022" class="Datatype">Nat</a> <a id="6026" class="Symbol">:</a> <a id="6028" href="Agda.Primitive.html#388" class="Primitive">Set</a> <a id="6032" class="Keyword">where</a>
-  <a id="Nat.Z"></a><a id="6040" href="Chapter.Preamble.Setup.html#6040" class="InductiveConstructor">Z</a> <a id="6042" class="Symbol">:</a> <a id="6044" href="Chapter.Preamble.Setup.html#6022" class="Datatype">Nat</a>
-  <a id="Nat.S"></a><a id="6050" href="Chapter.Preamble.Setup.html#6050" class="InductiveConstructor">S</a> <a id="6052" class="Symbol">:</a> <a id="6054" href="Chapter.Preamble.Setup.html#6022" class="Datatype">Nat</a> <a id="6058" class="Symbol">-&gt;</a> <a id="6061" href="Chapter.Preamble.Setup.html#6022" class="Datatype">Nat</a>
+<pre class="Agda"><a id="6002" class="Keyword">data</a> <a id="Nat"></a><a id="6007" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a> <a id="6011" class="Symbol">:</a> <a id="6013" href="Agda.Primitive.html#388" class="Primitive">Set</a> <a id="6017" class="Keyword">where</a>
+  <a id="Nat.Z"></a><a id="6025" href="Chapter.Prologue.Setup.html#6025" class="InductiveConstructor">Z</a> <a id="6027" class="Symbol">:</a> <a id="6029" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a>
+  <a id="Nat.S"></a><a id="6035" href="Chapter.Prologue.Setup.html#6035" class="InductiveConstructor">S</a> <a id="6037" class="Symbol">:</a> <a id="6039" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a> <a id="6043" class="Symbol">-&gt;</a> <a id="6046" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a>
 </pre>
 Notice that there is no color for the above Agda code after you
 pasted it.  Now type `Ctrl-C` followed by `Ctrl-L` in Emacs. This

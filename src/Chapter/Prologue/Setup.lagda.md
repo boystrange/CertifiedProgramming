@@ -1,11 +1,11 @@
 ---
 title: Setup
-prev:  Chapter.Preamble.Demo
+prev:  Chapter.Prologue.Demo
 ---
 
 <!--
 ```agda
-module Chapter.Preamble.Setup where
+module Chapter.Prologue.Setup where
 ```
 -->
 
@@ -23,9 +23,9 @@ successful.
 Before following these instructions, it may be worth having a look
 at the [Agda
 documentation](https://agda.readthedocs.io/en/latest/getting-started/installation.html#prebuilt-packages)
-in case there are more up-to-date and/or specific installation
-procedures for your Operating System. In particular, Agda is known
-to work reasonably well also in combination with [Visual Studio
+for up-to-date and/or specific installation procedures for your
+Operating System. In particular, Agda is known to work reasonably
+well also in combination with [Visual Studio
 Code](https://code.visualstudio.com), which is a more
 "modern-looking" editor compared to Emacs.
 
@@ -89,7 +89,7 @@ which may or may not lead to problems.
 2. Install Emacs. In the terminal, enter the following:
 
    ```bash
-   brew install --cask --no-quarantine emacs
+   brew install --cask --no-quarantine emacs-mac
    ```
 
    Note: now you should be able to find Emacs in your `/Application`

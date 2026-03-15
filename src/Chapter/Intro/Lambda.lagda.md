@@ -10,12 +10,11 @@ module Chapter.Intro.Lambda where
 ## Imports
 
 To try out the examples discussed in this chapter and to solve the
-proposed exercises it is necessary to import the `Nat` module, which
-defines the natural numbers and some basic operations on them. We
-will see how natural numbers are defined in a [dedicated
-chapter](Chapter.Intro.NaturalNumbers.html). For the time being, we
-simply import the module and make its content accessible by means of
-the following clause.
+proposed exercises it is necessary to import the `Data.Nat` module,
+which defines the natural numbers and some basic operations on
+them. We will see how natural numbers are defined in a future
+chapter. For the time being, we simply import the module and make
+its content accessible by means of the following clause.
 
 ```
 open import Data.Nat
@@ -50,7 +49,7 @@ where
   computes the result of applying the function to its argument.
 
 Below are a few simple examples of functions that make use of types
-and operators defined in the `Nat` module:
+and operators defined in the `Data.Nat` module:
 
 * `λ (x : ℕ) -> x` is the identity function for natural numbers;
 * `λ (x : ℕ) -> x + 1` is the successor function for natural numbers;
@@ -62,12 +61,13 @@ natural number as argument (the `ℕ` to the lhs of `->`) and produce
 a natural number as result (the `ℕ` to the rhs of `->`).  The type
 annotation of the argument can be omitted when its type can be
 inferred from the context. For example, since the `+` and `^`
-operators defined in the `Nat` module can only be applied to natural
-numbers, the last two functions above can be more concisely written
-as `λ x -> x + 1` and `λ x -> x ^ 2 + 1` respectively. We can verify
-this by asking Agda to compute the type of these functions. This is
-achieved by typing `C-c C-d` followed by the function (more
-generally the term) for which we want Agda to infer the type.
+operators defined in the `Data.Nat` module can only be applied to
+natural numbers, the last two functions above can be more concisely
+written as `λ x -> x + 1` and `λ x -> x ^ 2 + 1` respectively. We
+can verify this by asking Agda to compute the type of these
+functions. This is achieved by typing `C-c C-d` followed by the
+function (more generally the term) for which we want Agda to infer
+the type.
 
 All the examples above define **anonymous functions**, functions
 without a name that are defined "on the spot", wherever we need. It
@@ -155,8 +155,9 @@ conventions concerning function definitions and applications:
   `M₁ M₂ M₃` stands for `(M₁ M₂) M₃` and not for `M₁ (M₂ M₃)`.
 
 We will introduce new terms in the following chapters. For the time
-being, since we have imported the `Nat` module from the library, a
-number of terms defined therein are also available. In particular:
+being, since we have imported the `Data.Nat` module from the
+library, a number of terms defined therein are also available. In
+particular:
 
 * `zero` of type `ℕ` represents the natural number zero;
 * `suc` of type `ℕ -> ℕ` is a function that, applied to a natural

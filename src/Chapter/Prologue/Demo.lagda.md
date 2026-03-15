@@ -1,20 +1,20 @@
 ---
 title: A taste of Agda
-next:  Chapter.Preamble.Setup
+next:  Chapter.Prologue.Setup
 ---
 
 ```
-module Chapter.Preamble.Demo where
+module Chapter.Prologue.Demo where
 ```
 
 ## Imports
 
 The program described in this chapter makes use of natural numbers
 and of the equality predicate, whose definitions must be imported
-from Agda's standard library. The directives shown below import the
-necessary definitions from the Agda library. For the time being, we
-will use natural numbers and equality as black boxes; we will see
-how they can be defined in Agda later on.
+from Agda's standard library. The directives shown below do exactly
+that. For the time being, we will use natural numbers and equality
+as black boxes; we will see how they can be defined in Agda later
+on.
 
 ```
 open import Data.Nat
@@ -47,11 +47,11 @@ Once this script is loaded, we can ask Agda to compute the result of
 applying `fibo` to some numbers. By pressing `C-c C-n` and then
 entering `fibo 10` we obtain 55, as expected. 
 
-It is a known fact that the shown implementation of `fibo` is very
+It is a known fact that the shown implementation of `fibo` is
 inefficient. In fact, the time for computing the k-th Fibonacci
-number is exponential in k. We can propose a more efficient,
-albeit slightly more complex function that computes the k-th
-Fibonacci number in linear time, as follows.
+number is exponential in k. We can propose a more efficient, albeit
+slightly more complex function that computes the k-th Fibonacci
+number in linear time, as follows.
 
 ```
 fibo-from : ℕ -> ℕ -> ℕ -> ℕ
