@@ -20,11 +20,11 @@ import Chapter.Prologue.Setup
 ```
 import Chapter.Intro.Lambda
 import Chapter.Intro.Bool
+import Chapter.Intro.Bool.Properties
+import Chapter.Intro.NaturalNumbers
 ```
 
 <!--
--- import Chapter.Intro.Bool.Properties
--- import Chapter.Intro.NaturalNumbers
 -- import Chapter.Intro.Polymorphism
 -- import Chapter.Intro.Lists
 
