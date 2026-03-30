@@ -15,10 +15,10 @@ manipulate lists.
 ## Imports
 
 ```
-open import Library.Fun
-open import Library.Equality
-open import Library.Equality.Reasoning
-open import Library.Nat
+open import Chapter.Intro.Polymorphism
+open import Relation.Binary.PropositionalEquality hiding ([_])
+open ≡-Reasoning
+open import Data.Nat
 ```
 
 ## Data types with parameters
@@ -92,7 +92,7 @@ of a list.
 ```
 length : ∀{A : Set} -> List A -> ℕ
 length []        = 0
-length (_ :: xs) = succ (length xs)
+length (_ :: xs) = suc (length xs)
 ```
 
 ## List concatenation
@@ -121,15 +121,15 @@ concatenation of two lists is the sum of the lengths of the two
 lists.
 
 ```
-length-++ : ∀{A : Set} (xs ys : List A) -> length (xs ++ ys) == length xs + length ys
+length-++ : ∀{A : Set} (xs ys : List A) -> length (xs ++ ys) ≡ length xs + length ys
 length-++ []        ys = refl
-length-++ (_ :: xs) ys = cong succ (length-++ xs ys)
+length-++ (_ :: xs) ys = cong suc (length-++ xs ys)
 ```
 
 Also, list concatenation is associative.
 
 ```
-++-assoc : ∀{A : Set} (xs ys zs : List A) -> xs ++ (ys ++ zs) == (xs ++ ys) ++ zs
+++-assoc : ∀{A : Set} (xs ys zs : List A) -> xs ++ (ys ++ zs) ≡ (xs ++ ys) ++ zs
 ++-assoc []        ys zs = refl
 ++-assoc (x :: xs) ys zs = cong (x ::_) (++-assoc xs ys zs)
 ```
@@ -139,21 +139,20 @@ concatenation. On the left, this property follows from the very
 definition of list concatenation.
 
 ```
-++-unit-l : ∀{A : Set} (xs : List A) -> xs == [] ++ xs
+++-unit-l : ∀{A : Set} (xs : List A) -> xs ≡ [] ++ xs
 ++-unit-l _ = refl
 ```
 
 On the right, we prove the result by structural induction on the list.
 
 ```
-++-unit-r : ∀{A : Set} (xs : List A) -> xs == xs ++ []
+++-unit-r : ∀{A : Set} (xs : List A) -> xs ≡ xs ++ []
 ++-unit-r [] = refl
 ++-unit-r (x :: xs) =
   begin
-    x :: xs         ==⟨ cong (x ::_) (++-unit-r xs) ⟩
-    x :: (xs ++ []) ==⟨ refl ⟩
-    (x :: xs) ++ []
-  end
+    x :: xs         ≡⟨ cong (x ::_) (++-unit-r xs) ⟩
+    x :: (xs ++ []) ≡⟨ refl ⟩
+    (x :: xs) ++ [] ∎
 ```
 
 Note that list concatenation is not commutative in general.
@@ -186,32 +185,30 @@ surprisingly, reversing the concatenation of two lists yields the
 concatenation of the two lists reversed, but in the *reverse order*!
 
 ```
-reverse-++ : ∀{A : Set} (xs ys : List A) -> reverse (xs ++ ys) == reverse ys ++ reverse xs
+reverse-++ : ∀{A : Set} (xs ys : List A) -> reverse (xs ++ ys) ≡ reverse ys ++ reverse xs
 reverse-++ [] ys        = ++-unit-r (reverse ys)
 reverse-++ (x :: xs) ys =
   begin
-    reverse ((x :: xs) ++ ys)           ==⟨ refl ⟩
-    reverse (x :: (xs ++ ys))           ==⟨ refl ⟩
-    reverse (xs ++ ys) ++ [ x ]         ==⟨ cong (_++ [ x ]) (reverse-++ xs ys) ⟩
-    (reverse ys ++ reverse xs) ++ [ x ]   ⟨ ++-assoc (reverse ys) (reverse xs) [ x ] ⟩==
-    reverse ys ++ (reverse xs ++ [ x ]) ==⟨ refl ⟩
-    reverse ys ++ (reverse (x :: xs))
-  end
+    reverse ((x :: xs) ++ ys)           ≡⟨ refl ⟩
+    reverse (x :: (xs ++ ys))           ≡⟨ refl ⟩
+    reverse (xs ++ ys) ++ [ x ]         ≡⟨ cong (_++ [ x ]) (reverse-++ xs ys) ⟩
+    (reverse ys ++ reverse xs) ++ [ x ] ≡⟨ sym (++-assoc (reverse ys) (reverse xs) [ x ]) ⟩
+    reverse ys ++ (reverse xs ++ [ x ]) ≡⟨ refl ⟩
+    reverse ys ++ (reverse (x :: xs))   ∎
 ```
 
 We can now show that `reverse` is an involution.
 
 ```
-reverse-inv : ∀{A : Set} (xs : List A) -> reverse (reverse xs) == xs
+reverse-inv : ∀{A : Set} (xs : List A) -> reverse (reverse xs) ≡ xs
 reverse-inv [] = refl
 reverse-inv (x :: xs) =
   begin
-    reverse (reverse (x :: xs))           ==⟨ refl ⟩
-    reverse (reverse xs ++ [ x ])         ==⟨ reverse-++ (reverse xs) [ x ] ⟩
-    reverse [ x ] ++ reverse (reverse xs) ==⟨ refl ⟩
-    x :: reverse (reverse xs)             ==⟨ cong (x ::_) (reverse-inv xs) ⟩
-    x :: xs
-  end
+    reverse (reverse (x :: xs))           ≡⟨ refl ⟩
+    reverse (reverse xs ++ [ x ])         ≡⟨ reverse-++ (reverse xs) [ x ] ⟩
+    reverse [ x ] ++ reverse (reverse xs) ≡⟨ refl ⟩
+    x :: reverse (reverse xs)             ≡⟨ cong (x ::_) (reverse-inv xs) ⟩
+    x :: xs                               ∎
 ```
 
 ## A more efficient `reverse`
@@ -249,30 +246,28 @@ different implementations of the same function we need the following
 auxiliary result, relating `reverse-onto` and `reverse`.
 
 ```
-lemma-reverse-onto : ∀{A : Set} (xs ys : List A) -> reverse-onto xs ys == reverse xs ++ ys
+lemma-reverse-onto : ∀{A : Set} (xs ys : List A) -> reverse-onto xs ys ≡ reverse xs ++ ys
 lemma-reverse-onto [] ys = refl
 lemma-reverse-onto (x :: xs) ys =
   begin
-    reverse-onto (x :: xs) ys   ==⟨ refl ⟩
-    reverse-onto xs (x :: ys)   ==⟨ lemma-reverse-onto xs (x :: ys) ⟩
-    reverse xs ++ (x :: ys)     ==⟨ refl ⟩
-    reverse xs ++ ([ x ] ++ ys) ==⟨ ++-assoc (reverse xs) [ x ] ys ⟩
-    (reverse xs ++ [ x ]) ++ ys ==⟨ refl ⟩
-    reverse (x :: xs) ++ ys
-  end
+    reverse-onto (x :: xs) ys   ≡⟨ refl ⟩
+    reverse-onto xs (x :: ys)   ≡⟨ lemma-reverse-onto xs (x :: ys) ⟩
+    reverse xs ++ (x :: ys)     ≡⟨ refl ⟩
+    reverse xs ++ ([ x ] ++ ys) ≡⟨ ++-assoc (reverse xs) [ x ] ys ⟩
+    (reverse xs ++ [ x ]) ++ ys ≡⟨ refl ⟩
+    reverse (x :: xs) ++ ys     ∎
 ```
 
-We can now complete the proof of `fast-reverse xs == reverse xs`.
+We can now complete the proof of `fast-reverse xs ≡ reverse xs`.
 
 ```
-fast-reverse-correct : ∀{A : Set} (xs : List A) -> fast-reverse xs == reverse xs
+fast-reverse-correct : ∀{A : Set} (xs : List A) -> fast-reverse xs ≡ reverse xs
 fast-reverse-correct xs =
   begin
-    fast-reverse xs    ==⟨ refl ⟩
-    reverse-onto xs [] ==⟨ lemma-reverse-onto xs [] ⟩
-    reverse xs ++ []     ⟨ ++-unit-r (reverse xs) ⟩==
-    reverse xs
-  end
+    fast-reverse xs    ≡⟨ refl ⟩
+    reverse-onto xs [] ≡⟨ lemma-reverse-onto xs [] ⟩
+    reverse xs ++ []   ≡⟨ sym (++-unit-r (reverse xs)) ⟩
+    reverse xs         ∎
 ```
 
 ## Exercises
@@ -285,46 +280,44 @@ map f []        = []
 map f (x :: xs) = f x :: map f xs
 ```
 
-1. Prove that `length (map f xs) == length xs`
-2. Prove that `map f (xs ++ ys) == map f xs ++ map f ys`
-3. Prove that `map f (reverse xs) == reverse (map f xs)`
-4. Prove that `(map f ∘ map g) xs == map (f ∘ g) xs`
+1. Prove that `length (map f xs) ≡ length xs`
+2. Prove that `map f (xs ++ ys) ≡ map f xs ++ map f ys`
+3. Prove that `map f (reverse xs) ≡ reverse (map f xs)`
+4. Prove that `(map f ∘ map g) xs ≡ map (f ∘ g) xs`
 
 ```
-map-length : ∀{A B : Set} (f : A -> B) (xs : List A) -> length (map f xs) == length xs
+map-length : ∀{A B : Set} (f : A -> B) (xs : List A) -> length (map f xs) ≡ length xs
 map-length f [] = refl
-map-length f (x :: xs) = cong succ (map-length f xs)
+map-length f (x :: xs) = cong suc (map-length f xs)
 
-map-++ : ∀{A B : Set} (f : A -> B) (xs ys : List A) -> map f (xs ++ ys) == map f xs ++ map f ys
+map-++ : ∀{A B : Set} (f : A -> B) (xs ys : List A) -> map f (xs ++ ys) ≡ map f xs ++ map f ys
 map-++ f []        ys = refl
 map-++ f (x :: xs) ys = cong (f x ::_) (map-++ f xs ys)
 
-map-reverse : ∀{A B : Set} (f : A -> B) (xs : List A) -> map f (reverse xs) == reverse (map f xs)
+map-reverse : ∀{A B : Set} (f : A -> B) (xs : List A) -> map f (reverse xs) ≡ reverse (map f xs)
 map-reverse f [] = refl
 map-reverse f (x :: xs) =
   begin
-    map f (reverse (x :: xs))                   ==⟨ refl ⟩
-    map f (reverse xs ++ [ x ])                 ==⟨ map-++ f (reverse xs) [ x ] ⟩
-    map f (reverse xs) ++ map f [ x ]           ==⟨ cong (_++ map f [ x ]) (map-reverse f xs) ⟩
-    reverse (map f xs) ++ map f [ x ]           ==⟨ refl ⟩
-    reverse (map f xs) ++ reverse (map f [ x ]) ==⟨ reverse-++ (map f [ x ]) (map f xs) ⟩
-    reverse (map f [ x ] ++ map f xs)           ==⟨ refl ⟩
-    reverse (map f (x :: xs))
-  end
+    map f (reverse (x :: xs))                   ≡⟨ refl ⟩
+    map f (reverse xs ++ [ x ])                 ≡⟨ map-++ f (reverse xs) [ x ] ⟩
+    map f (reverse xs) ++ map f [ x ]           ≡⟨ cong (_++ map f [ x ]) (map-reverse f xs) ⟩
+    reverse (map f xs) ++ map f [ x ]           ≡⟨ refl ⟩
+    reverse (map f xs) ++ reverse (map f [ x ]) ≡⟨ reverse-++ (map f [ x ]) (map f xs) ⟩
+    reverse (map f [ x ] ++ map f xs)           ≡⟨ refl ⟩
+    reverse (map f (x :: xs))                   ∎
 
 map-∘ : ∀{A B C : Set} (f : B -> C) (g : A -> B) (xs : List A) ->
-  (map f ∘ map g) xs == map (f ∘ g) xs
+  (map f ∘ map g) xs ≡ map (f ∘ g) xs
 map-∘ f g [] = refl
 map-∘ f g (x :: xs) =
   begin
-    (map f ∘ map g) (x :: xs)       ==⟨ refl ⟩
-    map f (map g (x :: xs))         ==⟨ refl ⟩
-    map f (g x :: map g xs)         ==⟨ refl ⟩
-    f (g x) :: map f (map g xs)     ==⟨ refl ⟩
-    (f ∘ g) x :: (map f ∘ map g) xs ==⟨ cong ((f ∘ g) x ::_) (map-∘ f g xs) ⟩
-    (f ∘ g) x :: map (f ∘ g) xs     ==⟨ refl ⟩
-    map (f ∘ g) (x :: xs)
-  end
+    (map f ∘ map g) (x :: xs)       ≡⟨ refl ⟩
+    map f (map g (x :: xs))         ≡⟨ refl ⟩
+    map f (g x :: map g xs)         ≡⟨ refl ⟩
+    f (g x) :: map f (map g xs)     ≡⟨ refl ⟩
+    (f ∘ g) x :: (map f ∘ map g) xs ≡⟨ cong ((f ∘ g) x ::_) (map-∘ f g xs) ⟩
+    (f ∘ g) x :: map (f ∘ g) xs     ≡⟨ refl ⟩
+    map (f ∘ g) (x :: xs)           ∎
 ```
 {:.solution}
 
@@ -344,23 +337,21 @@ foldl f a (x :: xs) = foldl f (f a x) xs
 ```
 
 ```
-foldl-reverse-onto : {A : Set} (xs ys : List A) -> foldl (flip _::_) ys xs == reverse-onto xs ys
+foldl-reverse-onto : {A : Set} (xs ys : List A) -> foldl (flip _::_) ys xs ≡ reverse-onto xs ys
 foldl-reverse-onto [] ys = refl
 foldl-reverse-onto (x :: xs) ys =
   begin
-    foldl (flip _::_) ys (x :: xs) ==⟨ refl ⟩
-    foldl (flip _::_) (x :: ys) xs ==⟨ foldl-reverse-onto xs (x :: ys) ⟩
-    reverse-onto xs (x :: ys)      ==⟨ refl ⟩
-    reverse-onto (x :: xs) ys
-  end
+    foldl (flip _::_) ys (x :: xs) ≡⟨ refl ⟩
+    foldl (flip _::_) (x :: ys) xs ≡⟨ foldl-reverse-onto xs (x :: ys) ⟩
+    reverse-onto xs (x :: ys)      ≡⟨ refl ⟩
+    reverse-onto (x :: xs) ys      ∎
 
-foldl-reverse : {A : Set} (xs : List A) -> foldl (flip _::_) [] xs == reverse xs
+foldl-reverse : {A : Set} (xs : List A) -> foldl (flip _::_) [] xs ≡ reverse xs
 foldl-reverse xs =
   begin
-    foldl (flip _::_) [] xs ==⟨ foldl-reverse-onto xs [] ⟩
-    reverse-onto xs []      ==⟨ refl ⟩
-    fast-reverse xs         ==⟨ fast-reverse-correct xs ⟩
-    reverse xs
-  end
+    foldl (flip _::_) [] xs ≡⟨ foldl-reverse-onto xs [] ⟩
+    reverse-onto xs []      ≡⟨ refl ⟩
+    fast-reverse xs         ≡⟨ fast-reverse-correct xs ⟩
+    reverse xs              ∎
 ```
 -->

@@ -42,7 +42,7 @@ font.
 | `≡` and `≢`        | `\==` and `\==n`         |
 | `ℕ`                | `\bN`                    |
 | `∀` and `∃`        | `\all` and `\ex`         |
-| `⟨` and `⟩`        | `\langle` and `\rangle`  |
+| `⟨` and `⟩`        | `\<` or `\langle` and `\>` or `\rangle` |
 | `λ`                | `\lambda`                |
 | `₀`, `₁`, `₂`, ... | `\_0`, `\_1`, `\_2`, ... |
 | `∘`                | `\circ`                  |

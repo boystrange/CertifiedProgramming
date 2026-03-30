@@ -25,8 +25,11 @@ import Chapter.Intro.NaturalNumbers
 ```
 
 <!--
--- import Chapter.Intro.Polymorphism
--- import Chapter.Intro.Lists
+import Chapter.Intro.Polymorphism
+import Chapter.Intro.Lists
+import Chapter.Intro.GADTs
+
+-- Vec
 
 ## Constructive logic
 

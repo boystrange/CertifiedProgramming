@@ -87,7 +87,7 @@ which may or may not lead to problems.
 2. Install Emacs. In the terminal, enter the following:
 
    ```bash
-   brew install --cask --no-quarantine emacs-mac
+   brew install --cask emacs-mac
    ```
 
    Note: now you should be able to find Emacs in your `/Application`
@@ -180,9 +180,9 @@ To check that the installation was successful, create an empty file
 called `nat.agda` and open it in Emacs. Paste the following Agda
 code to the file.
 
-<pre class="Agda"><a id="6002" class="Keyword">data</a> <a id="Nat"></a><a id="6007" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a> <a id="6011" class="Symbol">:</a> <a id="6013" href="Agda.Primitive.html#388" class="Primitive">Set</a> <a id="6017" class="Keyword">where</a>
-  <a id="Nat.Z"></a><a id="6025" href="Chapter.Prologue.Setup.html#6025" class="InductiveConstructor">Z</a> <a id="6027" class="Symbol">:</a> <a id="6029" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a>
-  <a id="Nat.S"></a><a id="6035" href="Chapter.Prologue.Setup.html#6035" class="InductiveConstructor">S</a> <a id="6037" class="Symbol">:</a> <a id="6039" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a> <a id="6043" class="Symbol">-&gt;</a> <a id="6046" href="Chapter.Prologue.Setup.html#6007" class="Datatype">Nat</a>
+<pre class="Agda"><a id="5986" class="Keyword">data</a> <a id="Nat"></a><a id="5991" href="Chapter.Prologue.Setup.html#5991" class="Datatype">Nat</a> <a id="5995" class="Symbol">:</a> <a id="5997" href="Agda.Primitive.html#388" class="Primitive">Set</a> <a id="6001" class="Keyword">where</a>
+  <a id="Nat.Z"></a><a id="6009" href="Chapter.Prologue.Setup.html#6009" class="InductiveConstructor">Z</a> <a id="6011" class="Symbol">:</a> <a id="6013" href="Chapter.Prologue.Setup.html#5991" class="Datatype">Nat</a>
+  <a id="Nat.S"></a><a id="6019" href="Chapter.Prologue.Setup.html#6019" class="InductiveConstructor">S</a> <a id="6021" class="Symbol">:</a> <a id="6023" href="Chapter.Prologue.Setup.html#5991" class="Datatype">Nat</a> <a id="6027" class="Symbol">-&gt;</a> <a id="6030" href="Chapter.Prologue.Setup.html#5991" class="Datatype">Nat</a>
 </pre>
 Notice that there is no color for the above Agda code after you
 pasted it.  Now type `Ctrl-C` followed by `Ctrl-L` in Emacs. This
