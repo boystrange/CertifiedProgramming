@@ -133,7 +133,7 @@ that an expression such as `1 + 2 + 3` is to be interpreted as `(1 +
 function:
 
 ```
-+-assoc : ∀(x y z : ℕ) -> x + (y + z) ≡ (x + y) + z
++-assoc : ∀(x y z : ℕ) -> (x + y) + z ≡ x + (y + z)
 +-assoc x y z = {!!}
 ```
 
@@ -155,7 +155,7 @@ analysis on `y` is performed only once, on the left hand side of
 never performed). By doing case analysis on `x` we obtain:
 
 ```
-+-assoc₁ : ∀(x y z : ℕ) -> x + (y + z) ≡ (x + y) + z
++-assoc₁ : ∀(x y z : ℕ) -> (x + y) + z ≡ x + (y + z)
 +-assoc₁ zero    y z = {!!}
 +-assoc₁ (suc x) y z = {!!}
 ```
@@ -165,7 +165,7 @@ normalizing `x + (y + z) ≡ (x + y) + z` when `x` is replaced by
 `zero`. So, this hole can be filled with `refl`.
 
 ```
-+-assoc₂ : ∀(x y z : ℕ) -> x + (y + z) ≡ (x + y) + z
++-assoc₂ : ∀(x y z : ℕ) -> (x + y) + z ≡ x + (y + z)
 +-assoc₂ zero    y z = refl
 +-assoc₂ (suc x) y z = {!!}
 ```
@@ -186,7 +186,7 @@ provided by the `cong` function in the `Equality` module: if `x` and
 associative, thus:
 
 ```
-+-assoc₃ : ∀(x y z : ℕ) -> x + (y + z) ≡ (x + y) + z
++-assoc₃ : ∀(x y z : ℕ) -> (x + y) + z ≡ x + (y + z)
 +-assoc₃ zero    y z = refl
 +-assoc₃ (suc x) y z = cong suc (+-assoc₃ x y z)
 ```
@@ -199,9 +199,9 @@ that will come handy in due time. The first property asserts that
 `zero` is a right unit for `+`.
 
 ```
-+-unit-r : ∀(x : ℕ) -> x ≡ x + 0
-+-unit-r zero    = refl
-+-unit-r (suc x) = cong suc (+-unit-r x)
++-identityʳ : ∀(x : ℕ) -> x ≡ x + 0
++-identityʳ zero    = refl
++-identityʳ (suc x) = cong suc (+-identityʳ x)
 ```
 
 Note that the fact that `zero` is a left unit for `+` follows from
@@ -209,8 +209,8 @@ the very definition of `+` since `zero + x` is definitionally equal
 to `x`.
 
 ```
-+-unit-l : ∀(x : ℕ) -> x ≡ 0 + x
-+-unit-l x = refl
++-identityˡ : ∀(x : ℕ) -> x ≡ 0 + x
++-identityˡ x = refl
 ```
 
 The second auxiliary property asserts that an application of `suc`
@@ -218,7 +218,7 @@ in a sum can be shifted from one operand to the other without
 affecting the result.
 
 ```
-+-suc : ∀(x y : ℕ) -> suc x + y ≡ x + suc y
++-suc : ∀(x y : ℕ) -> x + suc y ≡ suc x + y
 +-suc zero    y = refl
 +-suc (suc x) y = cong suc (+-suc x y)
 ```
@@ -240,12 +240,12 @@ yields the following two cases:
 ```
 
 Concerning the first case, we have to provide a proof of `y ≡ y +
-zero`. This is precisely the property that we called `+-unit-r`
+zero`. This is precisely the property that we called `+-identityʳ`
 applied to the variable `y`.
 
 ```
 +-comm₂ : ∀(x y : ℕ) -> x + y ≡ y + x
-+-comm₂ zero    y = +-unit-r y
++-comm₂ zero    y = +-identityʳ y
 +-comm₂ (suc x) y = {!!}
 ```
 
@@ -269,13 +269,13 @@ expression. Let's see how we can close the commutativity proof of
 
 ```
 +-comm₃ : ∀(x y : ℕ) -> x + y ≡ y + x
-+-comm₃ zero    y = +-unit-r y
++-comm₃ zero    y = +-identityʳ y
 +-comm₃ (suc x) y =
   begin
     (suc x) + y ≡⟨ refl ⟩                   -- (1)
     suc (x + y) ≡⟨ cong suc (+-comm₃ x y) ⟩ -- (2)
     suc (y + x) ≡⟨ refl ⟩                   -- (3)
-    (suc y) + x ≡⟨ +-suc y x ⟩              -- (4)
+    (suc y) + x ≡⟨ sym (+-suc y x) ⟩        -- (4)
     y + (suc x)
   ∎
 ```
@@ -290,12 +290,20 @@ We use the number in comments to reference each step in the block:
 3. Here we use reflexivity once more to rewrite `suc (y + x)` into
    `(suc y) + x`, again using the definition of `+` (but from right
    to left!).
-4. Finally, we use the auxiliary property `+-suc` proved earlier to
-   shift the application of `suc` from the left to the right
-   operand.
+4. Here we see an example of *reverse rewriting*, whereby we would
+   like to rewrite `(suc y) + x` into `y + (suc x)` using `+-suc`,
+   except that `+-suc` proves the rewriting in the opposite
+   direction. Of course, we could have defined `+-suc` in such a way
+   that its conclusion matches the direction of the rewriting we
+   want to perform, but in general it may happen that we want to
+   perform the opposite of a rewriting we have already proved. In
+   these cases, we can use the symmetry property of equality to
+   perform the desired rewriting: if we have a proof `p` of the
+   equality `A ≡ B`, then `sym p` is a proof of the equality `B ≡
+   A`. We will see how to define the `sym` function later on.
 
 We conclude the discussion of this example with three observations.
-First, it may not be obvious *a priori* that `+-unit-r` and `+-suc`
+First, it may not be obvious *a priori* that `+-identityʳ` and `+-suc`
 are the right auxiliary properties required to prove `+-comm`. In
 fact, one usually realizes which auxiliary properties are needed
 while proving the main result. Second, the applications of
@@ -318,14 +326,14 @@ associative. To this aim, we first prove that `*` distributes over
 `+` on the right.
 
 ```
-*-dist-r : ∀(x y z : ℕ) -> (x + y) * z ≡ x * z + y * z
-*-dist-r zero y z = refl
-*-dist-r (suc x) y z =
+*-distribʳ-+ : ∀(x y z : ℕ) -> (x + y) * z ≡ x * z + y * z
+*-distribʳ-+ zero y z = refl
+*-distribʳ-+ (suc x) y z =
   begin
     (suc x + y) * z     ≡⟨ refl ⟩
     suc (x + y) * z     ≡⟨ refl ⟩
-    z + (x + y) * z     ≡⟨ cong (z +_) (*-dist-r x y z) ⟩
-    z + (x * z + y * z) ≡⟨ +-assoc z (x * z) (y * z) ⟩
+    z + (x + y) * z     ≡⟨ cong (z +_) (*-distribʳ-+ x y z) ⟩
+    z + (x * z + y * z) ≡⟨ sym (+-assoc z (x * z) (y * z)) ⟩
     (z + x * z) + y * z ≡⟨ refl ⟩
     suc x * z + y * z
   ∎
@@ -334,11 +342,11 @@ associative. To this aim, we first prove that `*` distributes over
 The proof is ordinary except for a small technical detail in the
 application of congruence. In the third rewriting step we rewrite
 <!----> `z + (x + y) * z` into `z + (x * z + y * z)` using a
-recursive application of `*-dist-r`. However, the rewriting occurs
+recursive application of `*-distribʳ-+`. However, the rewriting occurs
 in the right operand of the outermost `+`. In principle, we could
 justify this rewriting with the proof
 
-    cong (λ u -> z + u) (*-dist-r x y z)
+    cong (λ u -> z + u) (*-distribʳ-+ x y z)
 
 where the function `(λ u -> z + u)` describes the context in which
 the rewriting takes place. Instead of defining this lambda
@@ -351,31 +359,17 @@ abstract over the other one.
 We are now ready to prove the associativity of `*`.
 
 ```
-*-assoc : ∀(x y z : ℕ) -> x * (y * z) ≡ (x * y) * z
+*-assoc : ∀(x y z : ℕ) -> (x * y) * z ≡ x * (y * z)
 *-assoc zero y z = refl
 *-assoc (suc x) y z =
   begin
-    suc x * (y * z)     ≡⟨ refl ⟩
-    y * z + x * (y * z) ≡⟨ cong (y * z +_) (*-assoc x y z) ⟩
-    y * z + (x * y) * z ≡⟨ sym (*-dist-r y (x * y) z) ⟩
-    (y + x * y) * z     ≡⟨ refl ⟩
-    (suc x * y) * z
+    (suc x * y) * z     ≡⟨ refl ⟩
+    (y + x * y) * z     ≡⟨ *-distribʳ-+ y (x * y) z ⟩
+    y * z + (x * y) * z ≡⟨ cong (y * z +_) (*-assoc x y z) ⟩
+    y * z + x * (y * z) ≡⟨ refl ⟩
+    suc x * (y * z)
   ∎
 ```
-
-In the third step of equational reasoning block of this proof we see
-an example of reverse rewriting, whereby we aim at rewriting <!---->
-`y * z + (x * y) * z` into `(y + x * y) * z` using <!---->
-`*-dist-r`. The difficulty here is that `*-dist-r` proves the
-rewriting in the opposite direction. Of course, we could have
-defined `*-dist-r` in such a way that its conclusion matches the
-direction of the rewriting we want to perform in `*-assoc`, but in
-general it may happen that we want to perform the opposite of a
-rewriting we have already proved. In these cases, we can use the
-symmetry property of equality to perform the desired rewriting: if
-we have a proof `p` of the equality `A ≡ B`, then `sym p` is a proof
-of the equality `B ≡ A`. We will see how to define the `sym`
-function later on.
 
 ## Exercises
 
@@ -387,11 +381,11 @@ function later on.
    y` and `plus-minus-r : ∀(x y : ℕ) -> (x + y) - y ≡ x`.
 3. Define the factorial function `fact : ℕ -> ℕ` and verify its
    behavior using `C-c C-n`.
-4. Prove `*-unit-l` and `*-unit-r` showing that `1` is a left and
+4. Prove `*-identityˡ` and `*-identityʳ` showing that `1` is a left and
    right unit for `*`.
 5. Prove `*-comm` showing that `*` is commutative.
-6. Prove `*-dist-l` showing that `*` distributes over `+` on the
-   left using `*-comm` and `*-dist-r`.
+6. Prove `*-distribˡ-+` showing that `*` distributes over `+` on the
+   left using `*-comm` and `*-distribʳ-+`.
 7. Define the exponentiation function `_^_ : ℕ -> ℕ -> ℕ` and
    provide a fixity declaration so that it is left associative and
    has higher precedence than `*`.
@@ -433,34 +427,33 @@ fact (suc x) = suc x * fact x
 
 -- EXERCISE 4
 
-*-unit-l : ∀(x : ℕ) -> 1 * x ≡ x
-*-unit-l x =
+*-identityˡ : ∀(x : ℕ) -> 1 * x ≡ x
+*-identityˡ x =
   begin
     1 * x     ≡⟨ refl ⟩
     x + 0 * x ≡⟨ refl ⟩
-    x + 0     ≡⟨ sym (+-unit-r x) ⟩
+    x + 0     ≡⟨ sym (+-identityʳ x) ⟩
     x
   ∎
 
-*-unit-r : ∀(x : ℕ) -> x * 1 ≡ x
-*-unit-r zero    = refl
-*-unit-r (suc x) = cong suc (*-unit-r x)
+*-identityʳ : ∀(x : ℕ) -> x * 1 ≡ x
+*-identityʳ zero    = refl
+*-identityʳ (suc x) = cong suc (*-identityʳ x)
 
 -- EXERCISE 5
 
-*-suc : ∀(x y : ℕ) -> x + x * y ≡ x * suc y
+*-suc : ∀(x y : ℕ) -> x * suc y ≡ x + x * y
 *-suc zero y = refl
 *-suc (suc x) y =
   begin
-    suc x + (suc x * y)   ≡⟨ refl ⟩
-    suc x + (y + x * y)   ≡⟨ refl ⟩
-    suc (x + (y + x * y)) ≡⟨ cong suc (+-assoc x y (x * y)) ⟩
-    suc ((x + y) + x * y) ≡⟨ cong (λ u -> suc (u + x * y)) (+-comm x y) ⟩
-    suc ((y + x) + x * y) ≡⟨ sym (cong suc (+-assoc y x (x * y))) ⟩
-    suc (y + (x + x * y)) ≡⟨ cong (λ u -> suc (y + u)) (*-suc x y) ⟩
-    suc (y + x * suc y)   ≡⟨ refl ⟩
-    suc y + x * suc y     ≡⟨ refl ⟩
-    suc x * suc y
+    suc x * suc y         ≡⟨ refl ⟩
+    suc (y + x * suc y)   ≡⟨ cong (suc y +_) (*-suc x y) ⟩
+    suc (y + (x + x * y)) ≡⟨ cong suc (sym (+-assoc y x (x * y))) ⟩
+    suc ((y + x) + x * y) ≡⟨ cong suc (cong (_+ x * y) (+-comm y x)) ⟩
+    suc ((x + y) + x * y) ≡⟨ cong suc (+-assoc x y (x * y)) ⟩
+    suc (x + (y + x * y)) ≡⟨ refl ⟩
+    suc (x + suc x * y)   ≡⟨ refl ⟩
+    suc x + suc x * y
   ∎
 
 *-comm : ∀(x y : ℕ) -> x * y ≡ y * x
@@ -469,17 +462,17 @@ fact (suc x) = suc x * fact x
   begin
     suc x * y ≡⟨ refl ⟩
     y + x * y ≡⟨ cong (y +_) (*-comm x y) ⟩
-    y + y * x ≡⟨ *-suc y x ⟩
+    y + y * x ≡⟨ sym (*-suc y x) ⟩
     y * suc x
   ∎
 
 -- EXERCISE 6
 
-*-dist-l : ∀(x y z : ℕ) -> x * (y + z) ≡ x * y + x * z
-*-dist-l x y z =
+*-distribˡ-+ : ∀(x y z : ℕ) -> x * (y + z) ≡ x * y + x * z
+*-distribˡ-+ x y z =
   begin
     x * (y + z)   ≡⟨ *-comm x (y + z) ⟩
-    (y + z) * x   ≡⟨ *-dist-r y z x ⟩
+    (y + z) * x   ≡⟨ *-distribʳ-+ y z x ⟩
     y * x + z * x ≡⟨ cong (_+ z * x) (*-comm y x) ⟩
     x * y + z * x ≡⟨ cong (x * y +_) (*-comm z x) ⟩
     x * y + x * z
@@ -496,11 +489,11 @@ x ^ suc n = x * x ^ n
 -- EXERCISE 8
 
 ^-prop-1 : ∀(x m n : ℕ) -> x ^ m * x ^ n ≡ x ^ (m + n)
-^-prop-1 x zero    n = *-unit-l (x ^ n)
+^-prop-1 x zero    n = *-identityˡ (x ^ n)
 ^-prop-1 x (suc m) n =
   begin
     x ^ suc m * x ^ n   ≡⟨ refl ⟩
-    (x * x ^ m) * x ^ n ≡⟨ sym (*-assoc x (x ^ m) (x ^ n)) ⟩
+    (x * x ^ m) * x ^ n ≡⟨ *-assoc x (x ^ m) (x ^ n) ⟩
     x * (x ^ m * x ^ n) ≡⟨ cong (x *_) (^-prop-1 x m n) ⟩
     x * x ^ (m + n)
   ∎
@@ -513,11 +506,11 @@ x ^ suc n = x * x ^ n
   begin
     (x * y) ^ suc n           ≡⟨ refl ⟩
     (x * y) * (x * y) ^ n     ≡⟨ cong ((x * y) *_) (^-prop-2 x y n) ⟩
-    (x * y) * (x ^ n * y ^ n) ≡⟨ *-assoc (x * y) (x ^ n) (y ^ n) ⟩
-    ((x * y) * x ^ n) * y ^ n ≡⟨ sym (cong (_* y ^ n) (*-assoc x y (x ^ n))) ⟩
+    (x * y) * (x ^ n * y ^ n) ≡⟨ sym (*-assoc (x * y) (x ^ n) (y ^ n)) ⟩
+    ((x * y) * x ^ n) * y ^ n ≡⟨ cong (_* y ^ n) (*-assoc x y (x ^ n)) ⟩
     (x * (y * x ^ n)) * y ^ n ≡⟨ cong (λ u -> (x * u) * y ^ n) (*-comm y (x ^ n)) ⟩
-    (x * (x ^ n * y)) * y ^ n ≡⟨ cong (_* y ^ n) (*-assoc x (x ^ n) y) ⟩
-    ((x * x ^ n) * y) * y ^ n ≡⟨ sym (*-assoc (x * x ^ n) y (y ^ n)) ⟩
+    (x * (x ^ n * y)) * y ^ n ≡⟨ cong (_* y ^ n) (sym (*-assoc x (x ^ n) y)) ⟩
+    ((x * x ^ n) * y) * y ^ n ≡⟨ *-assoc (x * x ^ n) y (y ^ n) ⟩
     (x * x ^ n) * (y * y ^ n) ≡⟨ refl ⟩
     x ^ suc n * y ^ suc n
   ∎
@@ -531,7 +524,7 @@ x ^ suc n = x * x ^ n
     1 ^ suc n ≡⟨ refl ⟩
     1 * 1 ^ n ≡⟨ refl ⟩
     1 ^ n + 0 ≡⟨ cong (_+ 0) (^-unit n) ⟩
-    1 + 0     ≡⟨ +-unit-r 1 ⟩
+    1 + 0     ≡⟨ +-identityʳ 1 ⟩
     1
   ∎
 

@@ -89,7 +89,7 @@ which may or may not lead to problems.
 2. Install Emacs. In the terminal, enter the following:
 
    ```bash
-   brew install --cask --no-quarantine emacs-mac
+   brew install --cask emacs-mac
    ```
 
    Note: now you should be able to find Emacs in your `/Application`

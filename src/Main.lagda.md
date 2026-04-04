@@ -27,6 +27,7 @@ import Chapter.Intro.Lists
 ```
 
 <!--
+-- Vec
 
 ## Constructive logic
 
@@ -116,4 +117,3 @@ public website, or otherwise sharing these materials with people who
 are not part of the class) may be a violation of Copyright law. If
 you have questions regarding the use of materials from this site,
 please contact the instructor.
-
