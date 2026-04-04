@@ -15,8 +15,8 @@ different types.
 ## Imports
 
 ```
-open import Library.Bool
-open import Library.Nat
+open import Data.Bool
+open import Data.Nat
 ```
 
 ## Polymorphic functions
