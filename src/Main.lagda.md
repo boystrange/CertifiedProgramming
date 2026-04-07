@@ -27,7 +27,7 @@ import Chapter.Intro.Lists
 ```
 
 <!--
--- Vec
+import Chapter.Intro.Vectors
 
 ## Constructive logic
 

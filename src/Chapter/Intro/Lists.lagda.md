@@ -126,14 +126,6 @@ length-++ []       ys = refl
 length-++ (_ ∷ xs) ys = cong suc (length-++ xs ys)
 ```
 
-Also, list concatenation is associative.
-
-```
-++-assoc : ∀{A : Set} (xs ys zs : List A) -> (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs)
-++-assoc []       ys zs = refl
-++-assoc (x ∷ xs) ys zs = cong (x ∷_) (++-assoc xs ys zs)
-```
-
 The empty list `[]` acts as left and right unit for list
 concatenation. On the left, this property follows from the very
 definition of list concatenation.
@@ -152,6 +144,14 @@ On the right, we prove the result by structural induction on the list.
   x ∷ xs         ≡⟨ cong (x ∷_) (++-identityʳ xs) ⟩
   x ∷ (xs ++ []) ≡⟨ refl ⟩
   (x ∷ xs) ++ [] ∎
+```
+
+Finally, we can prove that list concatenation is associative.
+
+```
+++-assoc : ∀{A : Set} (xs ys zs : List A) -> (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs)
+++-assoc []       ys zs = refl
+++-assoc (x ∷ xs) ys zs = cong (x ∷_) (++-assoc xs ys zs)
 ```
 
 Note that list concatenation is not commutative in general.
