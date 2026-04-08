@@ -31,13 +31,13 @@ The `List A` data type has a type parameter `A` that specifies the
 type of the elements of the list. In a **parametric** data type such
 as `List A`, the parameters are uniform in the types of the
 constructors. For example, `[]` has type `List A` and `_∷_` has type
-`A -> List A -> List A`. Note how the paramtere is always `A`,
-independently of the constructor. In addition to parameters, a data
-type may also contain **indices**. Unlike parameters, the indices
-may depend on the specific constructor used to build a term of the
-data type. A typical example of indexed data type is that of lists
-of a specific length $n$, where $n$ is an index of the data type. We
-call such lists **vectors**.
+`A -> List A -> List A`. Note how the parameter is `A` regardless of
+the constructor. In addition to parameters, data types may also
+contain **indices**. Unlike parameters, the indices may depend on
+the specific constructor used to build a term of the data type. A
+typical example of indexed data type is that of lists of a specific
+length $n$, where $n$ is an index of the data type. We call such
+lists **vectors**.
 
 We can define the data type `Vec A n` of vectors with elements of
 type `A` and length `n` thus:
@@ -49,10 +49,10 @@ data Vec (A : Set) : ℕ → Set where
 ```
 
 According to this definition, `Vec` has a parameter `A` indicating
-the type of the elements it contains. Also, `Vec A` is *not* a type,
-but rather a function of type `ℕ → Set`, that is a function yielding
-a type when applied to a natural number. This number is an index
-used to indicate the length of the vector.
+the type of the elements it contains. By itself `Vec A` is *not* a
+type, but rather a function of type `ℕ → Set`, that is a function
+yielding a type when applied to a natural number. This number is an
+index used to indicate the length of the vector.
 
 Similarly to lists, we build vectors using the constructors `[]` and
 `_∷_`. When we use `[]` we are building a vector with no elements,
@@ -61,11 +61,14 @@ creating a vector `x ∷ xs` of length `suc n` starting with the
 element `x` (of type `A`) followed by a vector `xs` of length
 `n`.
 
+We give the constructor `_∷_` for vectors the same priority and
+associativity as the constructor `_∷_` for lists.
+
 ```
 infixr 5 _∷_
 ```
 
-For example, the following vectors contains the first four natural
+As an example, the following vector contains the first four natural
 numbers.
 
 ```
@@ -75,24 +78,9 @@ _ = 0 ∷ 1 ∷ 2 ∷ 3 ∷ []
 
 ## Building vectors
 
-As noted above, each constructor of vectors carries an implicit
-argument `A` standing for the type of the elements of the list being
-constructed. We have to bear this aspect in mind when we define
-functions that manipulate lists. For example, the following function
-creates a list containing a single element.
-
-```
-[_] : ∀{A : Set} -> A -> Vec A 1
-[_] = _∷ []
-```
-
-Now we can write `[ 0 ]` for the list consisting of the sole element
-`0` or `[ true ]` for the list consisting of the sole element
-`true`. The type of the elements of these lists is inferred
-automatically by Agda. If we want to write the implicit argument
-explicitly, we have to resort to the prefix notation: `[_] {ℕ} 0` is
-the singleton list made of `0` and `[_] {Bool} true` is the
-singleton list made of `true`.
+We now define two helper functions to build vectors of a certain
+length.  The function `repeat` below allows us to build vectors
+consisting of `n` copies of the supplied argument.
 
 ```
 repeat : ∀{A} → (n : ℕ) → A → Vec A n
@@ -102,6 +90,18 @@ repeat (suc n) x = x ∷ repeat n x
 
 Note the use of a dependent function type to bind the length `n` of
 the desired vector in the type `Vec A n` of the vector.
+
+We can then obtain the function `[_]` as a simple specialization of
+`repeat`:
+
+```
+[_] : ∀{A} -> A -> Vec A 1
+[_] = repeat 1
+```
+
+As for lists, we can write `[ 0 ]` for the vector consisting of the
+sole element `0` or `[ true ]` for the vector consisting of the sole
+element `true`.
 
 ## Operations on vectors
 
@@ -126,16 +126,22 @@ infixr 5 _++_
 If we have a vector of `n` vectors all of the same length `m`, we
 can define a flattening (or concatenating) operation that creates a
 single vector with all the contained elements, of the appropriate
-length `n * m`. Note that the same definition would not work had we
-chosen to use the index `m * n`, since the length of the resulting
-vector is computed as `n` times the sum of `m` rather than `m` times
-the sum of `n`.
+length `n * m`.
 
 ```
 concat : ∀{A m n} → Vec (Vec A m) n → Vec A (n * m)
 concat []         = []
 concat (xs ∷ xss) = xs ++ concat xss
 ```
+
+Note that the same definition would not work had we chosen to use
+the index `m * n`, since the length of the resulting vector is
+computed as `n` times the sum of `m` rather than `m` times the sum
+of `n`. In some cases, like this one, we are able to pick the
+"right" index to match the body of the function. Is some other
+cases, however, we have to provide explicit evidence to convince
+Agda that type and definition do match. We will discuss one such
+case below, where we implement the reversal of a vector.
 
 We conclude this section with two additional (and common) functions
 on vectors, where we see once again the role of the index as a
@@ -146,7 +152,7 @@ original one.
 
 ```
 map : ∀{A B n} → (A → B) → Vec A n → Vec B n
-map f [] = []
+map f []       = []
 map f (x ∷ xs) = f x ∷ map f xs
 ```
 
@@ -177,25 +183,25 @@ broken-reverse (x ∷ xs) = {!!} -- broken-reverse xs ++ [ x ]
 ```
 
 If we try to fill the hole with the commented expression Agda
-complains about a mismatch of the form `n + m != suc n of type ℕ` in
-the second equation. In order to understand this message, we have to
-think carefully at what we are trying to achieve in this particular
-case: we have established that the vector to be reversed has the
-form `x ∷ xs`, therefore its type must be `Vec A (suc n)` for some
-suitable `n` and we are supposed to produce a vector *of the same
-type, with the same index `suc n`*. By itself, the expression
-`broken-reverse xs ++ [ x ]` is perfectly reasonable and also well
-typed. If we recall the type we gave to `_++_` above, we establish
-that its type is `Vec A (n + 1)` and here lies the problem. For
-Agda, the type `Vec A (suc n)` is not (definitionally) equal to the
-type `Vec A (n + 1)` because the index `n + 1` is not the same as
-the index `suc n`.
+reports a mismatch `n + m != suc n of type ℕ` in the second
+equation. In order to understand this message, we have to think
+carefully at what we are trying to achieve in this particular case:
+we have established that the vector to be reversed has the form `x ∷
+xs`, therefore its type must be `Vec A (suc n)` for some suitable
+`n` and we are supposed to produce a vector *of the same type, with
+the same index `suc n`*. By itself, the expression `broken-reverse
+xs ++ [ x ]` is perfectly reasonable and also well typed. If we
+recall the type we gave to `_++_` above, we establish that its type
+is `Vec A (n + 1)` and here lies the problem. For Agda, the type
+`Vec A (suc n)` is not (definitionally) equal to the type `Vec A (n
++ 1)` because the index `n + 1` is not (definitionally) equal to the
+index `suc n`.
 
-There are several ways to work around this issue; here we discuss
-three of them. The first possibility is to define an *ad hoc*
-operator `∷ʳ` to append a single element `x` at the end of a vector
-of length `n`, yielding a vector of length `suc n`. Such operator
-could be defined thus:
+There are a few different ways to work around this issue; here we
+discuss three of them. The first possibility is to define an *ad
+hoc* operator `∷ʳ` to append a single element `x` at the end of a
+vector of length `n`, yielding a vector of length `suc n`. Such
+operator could be defined thus:
 
 ```
 _∷ʳ_ : ∀{A n} → Vec A n → A → Vec A (suc n)
@@ -203,7 +209,7 @@ _∷ʳ_ : ∀{A n} → Vec A n → A → Vec A (suc n)
 (y ∷ ys) ∷ʳ x = y ∷ (ys ∷ʳ x)
 ```
 
-Then we could define a well-typed version of `reverse` thus:
+Then we could obtain a well-typed version of `reverse` thus:
 
 ```
 reverse₁ : ∀{A n} → Vec A n → Vec A n
@@ -211,16 +217,20 @@ reverse₁ []       = []
 reverse₁ (x ∷ xs) = reverse₁ xs ∷ʳ x
 ```
 
+This solution is clearly sub-optimal, since it forces us to define
+an auxiliary operator (instead of using those already available)
+only to please Agda's type checker.
+
 Another possibility is to convince Agda that `n + 1` is indeed
 (propositionally) equal to `suc n`, and therefore that the
-expression `broken-reverse xs ++ [ x ]` has the right type to be
-used in the second equation of `broken-reverse`. We do so by using
-an explicit *substitution*, which is akin to a "cast" in other
+expression `broken-reverse xs ++ [ x ]` is a suitable expression to
+be used in the second equation of `broken-reverse`. We do so by
+using an explicit *substitution*, which is akin to a "cast" in other
 programming languages with the difference that we have to provide
 evidence of the equivalence of two types. Such substitution is
 implemented by a function `subst`. For the sake of illustration, it
 may be useful to see a particular instantiation of the type of
-`subst`, which we rename as `cast` for readability.
+`subst`, which we rename as `cast` to improve readability.
 
 ```
 cast : ∀{I : Set} (F : I → Set) {x y : I} → x ≡ y → F x → F y
@@ -230,23 +240,22 @@ cast = subst
 In words, `cast` (and therefore `subst`) accepts a function `F` from
 `I` to `Set`, that is an indexed family, a proof that `x` and `y`
 (of type `I`) are propositionally equal, and a term of type `F x` to
-produce a term of type `F y`. In our case, these ingredients are
-spelled out as follows:
+produce a term of type `F y`. In our setting, these ingredients are
+used as follows:
 
 * `I` is ℕ, that is the type of indices for `Vec`.
-* `F` is `Vec A`, that is a function that accepts an index `n` and
-  yields the type of vectors of length `n` with elements of type
-  `A`.
-* `x` and `y` are respectively the expressions `n + 1` and `suc
-  n`. The expression `n + 1` is the index in the type of the
-  expression that we are able to write, whereas the expression `suc
-  n` is the index in the type expected by Agda.
+* `F` is `Vec A`, that is a function that yields the type of vectors
+  of length `n` with elements of type `A` when applied to an index
+  `n`.
+* `x` and `y` are the expressions `n + 1` and `suc n`,
+  respectively. The expression `n + 1` is the index in the type of
+  the expression that we are able to write, whereas the expression
+  `suc n` is the index in the type expected by Agda.
 * There are various ways in which we can provide a proof that `n + 1
   ≡ suc n`. One example is `+-comm n 1`.
-* `F x` is the expression `broken-reverse xs ++ [ x ]`, whose type
-  is `Vec A (n + 1)`.
+* `F x` is the type of the expression `broken-reverse xs ++ [ x ]`.
 
-Using `cast` (or equivalently `subst`) we can then obtain another
+Using `cast` (or equivalently `subst`), we can obtain another
 well-typed version of `reverse` thus:
 
 ```
@@ -261,8 +270,8 @@ this way we avoid binding the implicit arguments `A` and `n` and
 obtain a more streamlined definition.
 
 The final solution we discuss corresponds to the efficient reverse
-function we have seen for lists. We start by defining an auxiliary
-function `reverse-onto`, thus:
+function we have already seen for lists. We start by defining an
+auxiliary function `reverse-onto`, thus:
 
 ```
 reverse-onto : ∀{A m n} → Vec A m → Vec A n → Vec A (n + m)
@@ -270,12 +279,12 @@ reverse-onto ys []       = ys
 reverse-onto ys (x ∷ xs) = cast (Vec _) (+-suc _ _) (reverse-onto (x ∷ ys) xs)
 ```
 
-Note that we need to use a cast: in the second equation, Agda
-expects us to provide an expression of type `Vec A (suc n + m)`, but
-the expression `reverse-onto (x ∷ ys) xs` has type `Vec A (n + suc
-m)`. We use `+-suc` to witness the equality `n + suc m ≡ suc n +
-m`. Now we can obtain the efficient implementation of `reverse` for
-vector thus:
+We need to use a cast also in this case: in the second equation,
+Agda expects us to provide an expression of type `Vec A (suc n +
+m)`, but the expression `reverse-onto (x ∷ ys) xs` has type `Vec A
+(n + suc m)`. We use `+-suc` to witness the equality `n + suc m ≡
+suc n + m`. Now we can obtain the efficient implementation of
+`reverse` for vector thus:
 
 ```
 reverse₃ : ∀{A n} → Vec A n → Vec A n
