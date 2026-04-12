@@ -27,11 +27,14 @@ import Chapter.Intro.Lists
 import Chapter.Intro.Vectors
 ```
 
-<!--
 ## Constructive logic
 
+<!--
 ```
--- import Chapter.Logic.Connectives
+import Chapter.Logic.Connectives
+```
+
+```
 -- import Chapter.Logic.Negation
 -- import Chapter.Logic.Existential
 -- import Chapter.Logic.Predicates
