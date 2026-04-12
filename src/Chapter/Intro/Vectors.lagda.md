@@ -13,7 +13,9 @@ prev:  Chapter.Intro.Lists
 module Chapter.Intro.Vectors where
 ```
 
-...
+In this section we study a refinement of lists that allows us to
+incorporate, within the data type, more precise information about
+some properties of the list being modeled.
 
 ## Imports
 
@@ -32,9 +34,11 @@ type of the elements of the list. In a **parametric** data type such
 as `List A`, the parameters are uniform in the types of the
 constructors. For example, `[]` has type `List A` and `_∷_` has type
 `A -> List A -> List A`. Note how the parameter is `A` regardless of
-the constructor. In addition to parameters, data types may also
-contain **indices**. Unlike parameters, the indices may depend on
-the specific constructor used to build a term of the data type. A
+the constructor.
+
+In addition to parameters, data types may also contain
+**indices**. Unlike parameters, the indices may depend on the
+specific constructor used to build a term of the data type. A
 typical example of indexed data type is that of lists of a specific
 length $n$, where $n$ is an index of the data type. We call such
 lists **vectors**.
@@ -193,9 +197,9 @@ the same index `suc n`*. By itself, the expression `broken-reverse
 xs ++ [ x ]` is perfectly reasonable and also well typed. If we
 recall the type we gave to `_++_` above, we establish that its type
 is `Vec A (n + 1)` and here lies the problem. For Agda, the type
-`Vec A (suc n)` is not (definitionally) equal to the type `Vec A (n
-+ 1)` because the index `n + 1` is not (definitionally) equal to the
-index `suc n`.
+`Vec A (suc n)` is not (definitionally) equal to the type <!-- -->
+`Vec A (n + 1)` because the index `n + 1` is not (definitionally)
+equal to the index `suc n`.
 
 There are a few different ways to work around this issue; here we
 discuss three of them. The first possibility is to define an *ad
@@ -224,13 +228,13 @@ only to please Agda's type checker.
 Another possibility is to convince Agda that `n + 1` is indeed
 (propositionally) equal to `suc n`, and therefore that the
 expression `broken-reverse xs ++ [ x ]` is a suitable expression to
-be used in the second equation of `broken-reverse`. We do so by
+be used in the second equation of `broken-reverse`. We can do so by
 using an explicit *substitution*, which is akin to a "cast" in other
 programming languages with the difference that we have to provide
 evidence of the equivalence of two types. Such substitution is
 implemented by a function `subst`. For the sake of illustration, it
 may be useful to see a particular instantiation of the type of
-`subst`, which we rename as `cast` to improve readability.
+`subst`, which we rename as `cast` to make our intent more explicit.
 
 ```
 cast : ∀{I : Set} (F : I → Set) {x y : I} → x ≡ y → F x → F y
@@ -251,8 +255,9 @@ used as follows:
   respectively. The expression `n + 1` is the index in the type of
   the expression that we are able to write, whereas the expression
   `suc n` is the index in the type expected by Agda.
-* There are various ways in which we can provide a proof that `n + 1
-  ≡ suc n`. One example is `+-comm n 1`.
+* `x ≡ y` is the type of the proof that `x` and `y` are
+  propositionally equal. There are various ways in which we can
+  provide a proof that `n + 1 ≡ suc n`. One example is `+-comm n 1`.
 * `F x` is the type of the expression `broken-reverse xs ++ [ x ]`.
 
 Using `cast` (or equivalently `subst`), we can obtain another

@@ -1,6 +1,7 @@
 ---
 title: Programming with lists
 prev:  Chapter.Intro.Polymorphism
+next:  Chapter.Intro.Vectors
 ---
 
 ```

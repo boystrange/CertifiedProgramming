@@ -24,11 +24,10 @@ import Chapter.Intro.Bool.Properties
 import Chapter.Intro.NaturalNumbers
 import Chapter.Intro.Polymorphism
 import Chapter.Intro.Lists
+import Chapter.Intro.Vectors
 ```
 
 <!--
-import Chapter.Intro.Vectors
-
 ## Constructive logic
 
 ```
