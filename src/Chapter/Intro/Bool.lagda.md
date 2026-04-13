@@ -248,7 +248,7 @@ priority among them.
    `xor` using just two equations?
 
 ```
--- EXERCISE 1
+-- EXERCISE 2
 and₂ : Bool -> Bool -> Bool
 and₂ x true  = x
 and₂ _ false = false

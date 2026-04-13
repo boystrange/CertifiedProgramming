@@ -225,7 +225,7 @@ priority among them.
    the exclusive or of two boolean values. Is it possible to define
    `xor` using just two equations?
 
-<pre class="Agda"><a id="9827" class="Comment">-- EXERCISE 1</a>
+<pre class="Agda"><a id="9827" class="Comment">-- EXERCISE 2</a>
 <a id="and₂"></a><a id="9841" href="Chapter.Intro.Bool.html#9841" class="Function">and₂</a> <a id="9846" class="Symbol">:</a> <a id="9848" href="Chapter.Intro.Bool.html#356" class="Datatype">Bool</a> <a id="9853" class="Symbol">-&gt;</a> <a id="9856" href="Chapter.Intro.Bool.html#356" class="Datatype">Bool</a> <a id="9861" class="Symbol">-&gt;</a> <a id="9864" href="Chapter.Intro.Bool.html#356" class="Datatype">Bool</a>
 <a id="9869" href="Chapter.Intro.Bool.html#9841" class="Function">and₂</a> <a id="9874" href="Chapter.Intro.Bool.html#9874" class="Bound">x</a> <a id="9876" href="Chapter.Intro.Bool.html#375" class="InductiveConstructor">true</a>  <a id="9882" class="Symbol">=</a> <a id="9884" href="Chapter.Intro.Bool.html#9874" class="Bound">x</a>
 <a id="9886" href="Chapter.Intro.Bool.html#9841" class="Function">and₂</a> <a id="9891" class="Symbol">_</a> <a id="9893" href="Chapter.Intro.Bool.html#390" class="InductiveConstructor">false</a> <a id="9899" class="Symbol">=</a> <a id="9901" href="Chapter.Intro.Bool.html#390" class="InductiveConstructor">false</a>
