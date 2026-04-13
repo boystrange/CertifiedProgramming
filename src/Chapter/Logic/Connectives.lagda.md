@@ -11,10 +11,10 @@ The logic we have been using so far is based on a limited set of
 Agda types:
 
 * **Logical implication** corresponds to the *arrow type*: a proof
-  of `A -> B` is a function that, applied to a proof of `A`, yields
+  of `A → B` is a function that, applied to a proof of `A`, yields
   a proof of `B`.
 * **Universal quantification** corresponds to the **dependent arrow
-  type**: a proof of `∀(x : A) -> B` is a function that, applied to
+  type**: a proof of `∀(x : A) → B` is a function that, applied to
   an element `x` of type `A`, yields a proof of `B` (where `x` may
   occur in `B`).
 * **Equality** `E ≡ F` is the type of proofs showing that `E` is
@@ -51,7 +51,7 @@ the two components of the pair.
 
 ```
 data _×_ (A B : Set) : Set where
-  _,_ : A -> B -> A × B
+  _,_ : A → B → A × B
 ```
 
 Notice that we have chosen an infix form for both the data type
@@ -78,10 +78,10 @@ example, we can define two projections `fst` and `snd` that allow us
 to access the two components of a pair.
 
 ```
-fst : ∀{A B : Set} -> A × B -> A
+fst : ∀{A B : Set} → A × B → A
 fst (x , _) = x
 
-snd : ∀{A B : Set} -> A × B -> B
+snd : ∀{A B : Set} → A × B → B
 snd (_ , y) = y
 ```
 
@@ -90,19 +90,19 @@ about conjunctions: if `A × B` is true, then `A` is true (`fst`) and
 `B` is true (`snd`).
 
 By combining conjunction (given by the data type `×`) and
-implication (given by the native Agda's arrow type `->`) we can also
+implication (given by the native Agda's arrow type `→`) we can also
 model double implication, commonly known as "if and only if".
 
 ```
-_⇔_ : Set -> Set -> Set
-A ⇔ B = (A -> B) × (B -> A)
+_⇔_ : Set → Set → Set
+A ⇔ B = (A → B) × (B → A)
 ```
 
 <!--
 ```
 infixr 1 _⇔_
 ```
--->
+-→
 
 ## Disjunction
 
@@ -117,8 +117,8 @@ proofs is provided. We call the two constructors `inj₁` and `inj₂` for
 
 ```
 data _⊎_ (A B : Set) : Set where
-  inj₁ : A -> A ⊎ B
-  inj₂ : B -> A ⊎ B
+  inj₁ : A → A ⊎ B
+  inj₂ : B → A ⊎ B
 ```
 
 We declare `⊎` as a right associative operator with smaller
@@ -133,7 +133,7 @@ B`. As an example, we can formulate the elimination principle for
 disjunctions as the following function.
 
 ```
-⊎-elim : ∀{A B C : Set} -> (A -> C) -> (B -> C) -> A ⊎ B -> C
+⊎-elim : ∀{A B C : Set} → (A → C) → (B → C) → A ⊎ B → C
 ⊎-elim f g (inj₁ x) = f x
 ⊎-elim f g (inj₂ x) = g x
 ```
@@ -142,7 +142,7 @@ For instance, we can use `⊎-elim` to prove that disjunction is
 commutative:
 
 ```
-⊎-comm : ∀{A B : Set} -> A ⊎ B -> B ⊎ A
+⊎-comm : ∀{A B : Set} → A ⊎ B → B ⊎ A
 ⊎-comm = ⊎-elim inj₂ inj₁
 ```
 
@@ -172,21 +172,21 @@ to prove `⊥`, then it is possible to prove anything. Stating this
 principle in Agda requires the use of the **absurd pattern**.
 
 ```
-ex-falso : ∀{A : Set} -> ⊥ -> A
-ex-falso ()
+⊥-elim : ∀{A : Set} → ⊥ → A
+⊥-elim ()
 ```
 
-The pattern `()` in the definition of `ex-falso` matches an
+The pattern `()` in the definition of `⊥-elim` matches an
 hypothetical value of type `⊥`. Since no constructor is provided for
 `⊥` and no such value may exist, the equation *has no right hand
 side* (note that there is no equal sign) and we are not obliged to
-provide a proof of `A` as required by the codomain of `ex-falso`.
+provide a proof of `A` as required by the codomain of `⊥-elim`.
 
 In other programming languages that are capable of defining a data
 type analogous to `⊥` it is possible to assign the type `⊥` to
 non-terminating expressions. If this were allowed also in Agda, the
 whole language would be useless insofar program verification is
-concerned, since `ex-falso` would easily allow us to prove *any*
+concerned, since `⊥-elim` would easily allow us to prove *any*
 property about *any* program. For this reason, Agda has a
 *termination checker* making sure that every definition is
 *terminating*. For example, if define `loop` as follows
@@ -195,9 +195,9 @@ property about *any* program. For this reason, Agda has a
 ```
 {-# TERMINATING #-}
 ```
--->
+-→
 ```
-loop : ℕ -> ⊥
+loop : ℕ → ⊥
 loop n = loop (suc n)
 ```
 
@@ -210,7 +210,7 @@ arguments. An even simpler example of non-terminating definition is
 ```
 {-# TERMINATING #-}
 ```
--->
+-→
 ```
 bottom : ⊥
 bottom = bottom
@@ -224,7 +224,7 @@ family of functions, but some of them
 <!--
 (e.g. [division](Chapter.Fun.Division.html) or [quick
 sort](Chapter.Fun.QuickSort.html))
--->
+-→
 cannot be easily formulated in this way. We will see a general
 technique for having these functions accepted by Agda in later
 sections.
@@ -232,75 +232,75 @@ sections.
 ## Exercises
 
 1. Prove that conjunction is commutative, namely the theorem
-   `×-comm : ∀{A B : Set} -> A × B -> B × A`.
+   `×-comm : ∀{A B : Set} → A × B → B × A`.
 2. Prove that `×` and `⊎` are idempotent, namely the theorems
-   `×-idem : ∀{A : Set} -> A × A ⇔ A` and `⊎-idem : ∀{A : Set} -> A
+   `×-idem : ∀{A : Set} → A × A ⇔ A` and `⊎-idem : ∀{A : Set} → A
    ⊎ A ⇔ A`.
 3. Prove that `×` distributes over `⊎` on the left, namely the
-   theorem `×⊎-dist : ∀{A B C : Set} -> A × (B ⊎ C) ⇔ (A × B) ⊎ (A ×
+   theorem `×⊎-dist : ∀{A B C : Set} → A × (B ⊎ C) ⇔ (A × B) ⊎ (A ×
    C)`.
 4. Prove that `⊤` is the unit of conjuction, namely the theorems
-   `×-unit-l : ∀{A : Set} -> ⊤ × A ⇔ A` and `×-unit-r : ∀{A : Set}
-   -> A × ⊤ ⇔ A`.
+   `×-unit-l : ∀{A : Set} → ⊤ × A ⇔ A` and `×-unit-r : ∀{A : Set}
+   → A × ⊤ ⇔ A`.
 5. Prove that `⊤` absorbs disjunctions, namely the theorems `⊎-⊤-l :
-   ∀{A : Set} -> ⊤ ⊎ A ⇔ ⊤` and `⊎-⊤-r : ∀{A : Set} -> A ⊎ ⊤ ⇔ ⊤`.
+   ∀{A : Set} → ⊤ ⊎ A ⇔ ⊤` and `⊎-⊤-r : ∀{A : Set} → A ⊎ ⊤ ⇔ ⊤`.
 6. Prove that `⊥` is the unit of disjunctions, namely the theorems
-   `⊎-unit-l : ∀{A : Set} -> ⊥ ⊎ A ⇔ A` and `⊎-unit-r : ∀{A : Set}
-   -> A ⊎ ⊥ ⇔ A`.
+   `⊎-unit-l : ∀{A : Set} → ⊥ ⊎ A ⇔ A` and `⊎-unit-r : ∀{A : Set}
+   → A ⊎ ⊥ ⇔ A`.
 7. Prove that `⊥` absorbs conjunctions, namely the theorems `×-⊥-l :
-   ∀{A : Set} -> ⊥ × A ⇔ ⊥` and `×-⊥-r : ∀{A : Set} -> A × ⊥ ⇔ ⊥`.
+   ∀{A : Set} → ⊥ × A ⇔ ⊥` and `×-⊥-r : ∀{A : Set} → A × ⊥ ⇔ ⊥`.
 8. Prove that every boolean value is either `true` or `false`,
-   namely the theorem `Bool-⊎ : ∀(b : Bool) -> (b ≡ true) ⊎ (b ≡
+   namely the theorem `Bool-⊎ : ∀(b : Bool) → (b ≡ true) ⊎ (b ≡
    false)`.
 
 ```
 -- EXERCISE 1
-×-comm : ∀{A B : Set} -> A × B -> B × A
+×-comm : ∀{A B : Set} → A × B → B × A
 ×-comm (x , y) = y , x
 
 -- EXERCISE 2
-×-idem : ∀{A : Set} -> A × A ⇔ A
-×-idem = fst , λ x -> (x , x)
+×-idem : ∀{A : Set} → A × A ⇔ A
+×-idem = fst , λ x → (x , x)
 
-⊎-idem : ∀{A : Set} -> A ⊎ A ⇔ A
+⊎-idem : ∀{A : Set} → A ⊎ A ⇔ A
 ⊎-idem = ⊎-elim id id , inj₁
 
 -- EXERCISE 3
-×⊎-dist : ∀{A B C : Set} -> A × (B ⊎ C) ⇔ (A × B) ⊎ (A × C)
+×⊎-dist : ∀{A B C : Set} → A × (B ⊎ C) ⇔ (A × B) ⊎ (A × C)
 ×⊎-dist =
-  (λ p -> ⊎-elim (inj₁ ∘ (fst p ,_)) (inj₂ ∘ (fst p ,_)) (snd p)) ,
-  ⊎-elim (λ p -> fst p , inj₁ (snd p)) (λ p -> fst p , inj₂ (snd p))
+  (λ p → ⊎-elim (inj₁ ∘ (fst p ,_)) (inj₂ ∘ (fst p ,_)) (snd p)) ,
+  ⊎-elim (λ p → fst p , inj₁ (snd p)) (λ p → fst p , inj₂ (snd p))
 
 -- EXERCISE 4
-×-unit-l : ∀{A : Set} -> ⊤ × A ⇔ A
+×-unit-l : ∀{A : Set} → ⊤ × A ⇔ A
 ×-unit-l = snd , (tt ,_)
 
-×-unit-r : ∀{A : Set} -> A × ⊤ ⇔ A
+×-unit-r : ∀{A : Set} → A × ⊤ ⇔ A
 ×-unit-r = fst , (_, tt)
 
 -- EXERCISE 5
-⊎-unit-l : ∀{A : Set} -> ⊥ ⊎ A ⇔ A
-⊎-unit-l = ⊎-elim ex-falso id , inj₂
+⊎-unit-l : ∀{A : Set} → ⊥ ⊎ A ⇔ A
+⊎-unit-l = ⊎-elim ⊥-elim id , inj₂
 
-⊎-unit-r : ∀{A : Set} -> A ⊎ ⊥ ⇔ A
-⊎-unit-r = ⊎-elim id ex-falso , inj₁
+⊎-unit-r : ∀{A : Set} → A ⊎ ⊥ ⇔ A
+⊎-unit-r = ⊎-elim id ⊥-elim , inj₁
 
 -- EXERCISE 6
-⊎-⊤-l : ∀{A : Set} -> ⊤ ⊎ A ⇔ ⊤
+⊎-⊤-l : ∀{A : Set} → ⊤ ⊎ A ⇔ ⊤
 ⊎-⊤-l = const tt , inj₁
 
-⊎-⊤-r : ∀{A : Set} -> A ⊎ ⊤ ⇔ ⊤
+⊎-⊤-r : ∀{A : Set} → A ⊎ ⊤ ⇔ ⊤
 ⊎-⊤-r = const tt , inj₂
 
 -- EXERCISE 7
-×-⊥-l : ∀{A : Set} -> ⊥ × A ⇔ ⊥
-×-⊥-l = fst , ex-falso
+×-⊥-l : ∀{A : Set} → ⊥ × A ⇔ ⊥
+×-⊥-l = fst , ⊥-elim
 
-×-⊥-r : ∀{A : Set} -> A × ⊥ ⇔ ⊥
-×-⊥-r = snd , ex-falso
+×-⊥-r : ∀{A : Set} → A × ⊥ ⇔ ⊥
+×-⊥-r = snd , ⊥-elim
 
 -- EXERCISE 8
-Bool-⊎ : ∀(b : Bool) -> (b ≡ true) ⊎ (b ≡ false)
+Bool-⊎ : ∀(b : Bool) → (b ≡ true) ⊎ (b ≡ false)
 Bool-⊎ true  = inj₁ refl
 Bool-⊎ false = inj₂ refl
 
