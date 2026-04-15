@@ -1,4 +1,4 @@
-3---
+---
 title: Table of contents
 ---
 
@@ -29,13 +29,13 @@ import Chapter.Intro.Vectors
 
 ## Constructive logic
 
-<!--
 ```
 import Chapter.Logic.Connectives
-import Chapter.Logic.Negation
 ```
 
+<!--
 ```
+-- import Chapter.Logic.Negation
 -- import Chapter.Logic.Existential
 -- import Chapter.Logic.Predicates
 -- import Chapter.Logic.Equality

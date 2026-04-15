@@ -98,11 +98,11 @@ _⇔_ : Set → Set → Set
 A ⇔ B = (A → B) × (B → A)
 ```
 
-<!--
+We declare `⇔` as a right associative operator with small priority.
+
 ```
 infixr 1 _⇔_
 ```
--→
 
 ## Disjunction
 
@@ -112,8 +112,7 @@ are providing. This interpretation suggests the representation of
 disjunction `⊎` as a data type with two constructors, one taking a
 proof of `A` and the other taking a proof of `B`, to yield a proof
 of `A ⊎ B`. The name of the constructor indicates which of the two
-proofs is provided. We call the two constructors `inj₁` and `inj₂` for
-"inject left" and "inject right".
+proofs is provided. We call the two constructors `inj₁` and `inj₂`.
 
 ```
 data _⊎_ (A B : Set) : Set where
@@ -195,7 +194,7 @@ property about *any* program. For this reason, Agda has a
 ```
 {-# TERMINATING #-}
 ```
--→
+-->
 ```
 loop : ℕ → ⊥
 loop n = loop (suc n)
@@ -210,7 +209,7 @@ arguments. An even simpler example of non-terminating definition is
 ```
 {-# TERMINATING #-}
 ```
--→
+-->
 ```
 bottom : ⊥
 bottom = bottom
@@ -224,7 +223,7 @@ family of functions, but some of them
 <!--
 (e.g. [division](Chapter.Fun.Division.html) or [quick
 sort](Chapter.Fun.QuickSort.html))
--→
+-->
 cannot be easily formulated in this way. We will see a general
 technique for having these functions accepted by Agda in later
 sections.
