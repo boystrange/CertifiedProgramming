@@ -1,7 +1,6 @@
 ---
 title: Negation and decidability
 prev:  Chapter.Logic.Connectives
-next:  Chapter.Logic.Existential
 ---
 
 <!--
@@ -153,9 +152,9 @@ proposition `A`. As we know from the [previous
 chapter](Chapter.Logic.Connectives.html), in constructive logic, a
 proof of a disjunction `¬ A ⊎ A` embeds either a proof of `¬ A` or a
 proof of `A`, hence it may very well be the case that we are unable
-to prove `¬ A ⊎ A` if we cannot find either a proof of `¬ A` or a
-proof of `A`. The propositions for which we are able to prove `¬ A ⊎
-A` are said to be **decidable**.
+to prove `¬ A ⊎ A` if we cannot find a proof of `¬ A` nor a proof of
+`A`. The propositions for which we are able to prove `¬ A ⊎ A` are
+said to be **decidable**.
 
 ```
 Decidable : Set → Set
@@ -254,7 +253,7 @@ clauses has as many patterns as the number of `with` clauses.
    is usually assumed to be true. This is not the case in
    constructive logic. Show that double negation elimination implies
    the excluded middle, namely prove the theorem `dn-em : (∀{A : Set}
-   → (¬ ¬ A → A)) → ∀{A : Set} → Decidable A `. Hint: use the
+   → (¬ ¬ A → A)) → ∀{A : Set} → Decidable A`. Hint: use the
    solution to the previous exercise.
 ```
 -- EXERCISE 1
