@@ -30,7 +30,7 @@ called *witness* along with a proof that $x$ satisfies the predicate
 $P$. This is an example of **dependent pair** where the type of the
 second component depends on the value $x$ of the first one. The data
 type that we use to represent dependent pairs is traditionally
-called "sigma type" and is a refinement of the type `_∧_` we have
+called "sigma type" and is a refinement of the type `_×_` we have
 defined in a [previous
 chapter](Chapter.Logic.Connectives.html#conjunction).
 
@@ -38,15 +38,14 @@ chapter](Chapter.Logic.Connectives.html#conjunction).
       _,_ : ∀(x : A) -> B x -> Σ A B
 
 The *non-dependent* pair type can be defined as an instance of a
-sigma type where the type of the second component does *not* depend
+sigma type where the type of the second component *does not* depend
 on the value of the first one.
-
 
     _×_ : Set -> Set -> Set
     A × B = Σ A λ _ -> B
 
 The two projections `fst` and `snd` for sigma types are the same we
-have already defined for `_∧_`, except for their type. In
+have already defined for `_×_`, except for their type. In
 particular, the type of `snd` refers to the first component of a
 dependent pair by means of `fst`.
 
@@ -98,12 +97,12 @@ respectively return the head and the tail of a non-empty list.
 
 ```
 head : ∀{A : Set} -> List⁺ A -> A
-head ([]     , nempty) = contradiction refl nempty
-head (x ∷ _  , _     ) = x
+head ([]     , ne) = contradiction refl ne
+head (x ∷ _  , _ ) = x
 
 tail : ∀{A : Set} -> List⁺ A -> List A
-tail ([]     , nempty) = contradiction refl nempty
-tail (_ ∷ xs , _     ) = xs
+tail ([]     , ne) = contradiction refl ne
+tail (_ ∷ xs , _ ) = xs
 ```
 
 In the definition of `head` and `tail` we perform case analysis on
@@ -111,10 +110,10 @@ an element of type `List⁺ A`, which is a pair consisting of a list
 and a proof that the list is not empty. We further analyze the
 structure of the list. Agda is not able to automatically rule out
 the case in which the list is `[]`. However, this case is made
-impossible by the proof `nempty` that the list is not empty, hence
-we can honor our obligation to yield a result of the desired type by
-invoking `ex-falso`. When the list is not empty, we simply return
-the right component.
+impossible by the proof `ne that the list is not empty, hence we can
+honor our obligation to yield a result of the desired type by
+invoking `contradiction`. When the list is not empty, we simply
+return the right component.
 
 ## Intrinsic verification
 
@@ -146,16 +145,15 @@ cases. With the help of this syntax we define `pred` thus.
 
 ```
 pred : ∀(p : ℕ⁺) -> ∃[ x ] fst p ≡ suc x
-pred (zero  , nzero) = contradiction refl nzero
-pred (suc x , _    ) = x , refl
+pred (zero  , nz) = contradiction refl nz
+pred (suc x , _ ) = x , refl
 ```
 
 Note the use of `fst` in the type of `pred` to refer to the first
 component of the pair `p`. As usual, we perform case analysis on the
 argument of type `ℕ⁺`, further analyzing the witness in the
-pair. Once we have established that this must have the form `succ
-x`, we return `x` along with the proof that this is the correct
-result.
+pair. Once we have established that this must have the form `suc x`,
+we return `x` along with the proof that this is the correct result.
 
 The definition of functions whose type specifies their behavior in
 detail is called *intrinsic verification*. We will see more
@@ -222,8 +220,6 @@ showing that adding a non-null number `suc y` to `x` cannot yield
 *-zero-neq-one : ∀(x : ℕ) -> x * 0 ≢ 1
 *-zero-neq-one (suc x) eq = *-zero-neq-one x eq
 ```
-
-WARNING `!=` HAS NOT BEEN DEFINED
 
 Next we show that if the product of two numbers yields `1`, then
 both numbers must be `1`.
