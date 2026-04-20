@@ -22,8 +22,9 @@ open import Data.Sum
 open import Data.Product
 open import Data.Bool
 open import Data.Nat
+open import Data.Nat.Properties using (suc-injective)
 open import Data.List
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 ```
 
 ## Constructive negation
@@ -97,19 +98,20 @@ We will make a rather extensive use of negation in the following
 chapters. For the time being, we prove a few laws related to
 negation. The first one is **contradiction**, namely the fact that
 if we have both a proof of `A` and a proof of `¬ A` then we can
-derive a proof of `⊥`. Recalling that the negation of `A` is defined
-as a function that turns a proof of `A` into a proof of `⊥`, we see
-that contradiction simply amounts to function application.
+obtain a proof of anything. Recalling that the negation of `A` is
+defined as a function that turns a proof of `A` into a proof of `⊥`,
+we see that contradiction simply amounts to function application and
+an application of the elimination principle for `⊥`.
 
 ```
-contradiction : ∀{A : Set} → A → ¬ A → ⊥
-contradiction p n = n p
+contradiction : ∀{A B : Set} → A → ¬ A → B
+contradiction p n = ⊥-elim (n p)
 ```
 
 Recalling that in Agda the type `¬ A` is *defined* to be the same as
-the type `A → ⊥`, the type of `contradiction` can also be written
-as `∀{A : Set} → A → ¬ ¬ A`. This is one of the so-called "double
-negation" laws.
+the type `A → ⊥`, the type of `contradiction` can also be
+specialized to `∀{A : Set} → A → ¬ ¬ A`. This is one of the
+so-called "double negation" laws.
 
 ```
 double-negation : ∀{A : Set} → A → ¬ ¬ A
@@ -200,17 +202,17 @@ numbers. In this case, when we compare two numbers of the form `suc
 x` and `suc y`, we first decide whether `x` and `y` are equal. If
 they are not, then we conclude that `suc x` and `suc y` must be
 different (recall that constructors such as `suc` are injective). If
-`x` and `y` are equal, then they can be unified and we can prove
-`suc x ≡ suc y` by reflexivity.
+`x` and `y` are equal, then we can prove `suc x ≡ suc y` by
+congruence.
 
 ```
 Nat-eq-decidable : ∀(x y : ℕ) → Decidable (x ≡ y)
-Nat-eq-decidable zero    zero    = yes refl
-Nat-eq-decidable zero    (suc y) = no λ ()
-Nat-eq-decidable (suc x) zero    = no λ ()
+Nat-eq-decidable zero zero = yes refl
+Nat-eq-decidable zero (suc y) = no λ ()
+Nat-eq-decidable (suc x) zero = no λ ()
 Nat-eq-decidable (suc x) (suc y) with Nat-eq-decidable x y
-... | no  neq  = no λ { refl → neq refl }
-... | yes refl = yes refl
+... | no neq = no (contraposition suc-injective neq)
+... | yes eq = yes (cong suc eq)
 ```
 
 As a final example we show that the equality of lists is decidable,
@@ -218,21 +220,21 @@ provided that the equality between their elements is also decidable.
 
 ```
 List-eq-decidable : ∀{A : Set} → (∀(x y : A) → Decidable (x ≡ y)) → (xs ys : List A) → Decidable (xs ≡ ys)
-List-eq-decidable _≡?_ []        []       = yes refl
-List-eq-decidable _≡?_ []        (x ∷ ys) = no λ ()
-List-eq-decidable _≡?_ (x ∷ xs) []        = no λ ()
-List-eq-decidable _≡?_ (x ∷ xs) (y ∷ ys) with x ≡? y | List-eq-decidable _≡?_ xs ys
-... | no  neq  | _        = no λ { refl → neq refl }
-... | yes _    | no  neq  = no λ { refl → neq refl }
-... | yes refl | yes refl = yes refl
+List-eq-decidable _≡?_ [] [] = yes refl
+List-eq-decidable _≡?_ [] (x ∷ ys) = no λ ()
+List-eq-decidable _≡?_ (x ∷ xs) [] = no λ ()
+List-eq-decidable _≡?_ (x ∷ xs) (y ∷ ys) with x ≡? y
+... | no neq = no (contraposition (λ { refl → refl }) neq)
+... | yes refl with List-eq-decidable _≡?_ xs ys
+... | no neq = no (contraposition (λ { refl → refl }) neq)
+... | yes refl = yes refl
 ```
 
-The case in which we compare two lists of the form `x ∷ xs` and `y
-∷ ys` illustrates the use of multiple `with` clauses. In this case,
+The case in which we compare two lists of the form `x ∷ xs` and `y ∷
+ys` illustrates the use of cascading `with` clauses. In this case,
 we have to compare both the heads and the tails of the two
 lists. Only if both components are equal can we conclude that the
-original lists are equal. Note that each case after the `with`
-clauses has as many patterns as the number of `with` clauses.
+original lists are equal.
 
 ## Exercises
 
@@ -264,13 +266,15 @@ ntop p = p tt
 -- EXERCISE 2: all laws but the last one can be proved.
 
 de-morgan-1 : ∀{A B : Set} → ¬ A ⊎ ¬ B → ¬ (A × B)
-de-morgan-1 = {!!} -- ⊎-elim (contraposition fst) (contraposition snd)
+de-morgan-1 (inj₁ na) (a , b) = na a
+de-morgan-1 (inj₂ nb) (a , b) = nb b
 
 de-morgan-2 : ∀{A B : Set} → ¬ A × ¬ B → ¬ (A ⊎ B)
-de-morgan-2 p = {!!} -- ⊎-elim (fst p) (snd p)
+de-morgan-2 (na , nb) (inj₁ a) = na a
+de-morgan-2 (na , nb) (inj₂ b) = nb b
 
 de-morgan-3 : ∀{A B : Set} → ¬ (A ⊎ B) → ¬ A × ¬ B
-de-morgan-3 nab = {!!} -- contraposition inj₁ nab , contraposition inj₂ nab
+de-morgan-3 nab = contraposition inj₁ nab , contraposition inj₂ nab
 
 -- EXERCISE 3
 

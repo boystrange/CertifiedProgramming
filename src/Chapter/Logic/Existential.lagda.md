@@ -15,13 +15,11 @@ open import Function using (_∘_)
 open import Data.Bool
 open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
 open import Data.Nat.Properties
-open import Data.List hiding (head; tail)
+open import Data.List using (List; []; _∷_; _++_; [_])
 open import Data.Sum
 open import Data.Product
 open import Relation.Nullary
 open import Relation.Binary.PropositionalEquality using (refl; _≡_; _≢_; cong; sym; subst)
--- open import Library.Logic hiding (fst; snd)
--- open import Library.Logic.Laws
 ```
 
 ## Defining the existential quantifier
@@ -100,11 +98,11 @@ respectively return the head and the tail of a non-empty list.
 
 ```
 head : ∀{A : Set} -> List⁺ A -> A
-head ([]     , nempty) = {!!} -- ex-falso (nempty refl)
+head ([]     , nempty) = contradiction refl nempty
 head (x ∷ _  , _     ) = x
 
 tail : ∀{A : Set} -> List⁺ A -> List A
-tail ([]     , nempty) = {!!} -- ex-falso (nempty refl)
+tail ([]     , nempty) = contradiction refl nempty
 tail (_ ∷ xs , _     ) = xs
 ```
 
@@ -148,7 +146,7 @@ cases. With the help of this syntax we define `pred` thus.
 
 ```
 pred : ∀(p : ℕ⁺) -> ∃[ x ] fst p ≡ suc x
-pred (zero  , nzero) = {!!} -- ex-falso (nzero refl)
+pred (zero  , nzero) = contradiction refl nzero
 pred (suc x , _    ) = x , refl
 ```
 
@@ -232,7 +230,7 @@ both numbers must be `1`.
 
 ```
 *-one : ∀(x y : ℕ) -> x * y ≡ 1 -> x ≡ 1 × y ≡ 1
-*-one (suc  x)        zero            eq = {!!} -- ex-falso (*-zero-neq-one x eq)
+*-one (suc  x)        zero            eq = contradiction eq (*-zero-neq-one x)
 *-one (suc  zero)     (suc  zero)     eq = refl , refl
 *-one (suc  (suc  x)) (suc  zero)     ()
 *-one (suc  (suc  x)) (suc  (suc  y)) ()
@@ -243,9 +241,9 @@ either `x` is `1` or `y` is `0`.
 
 ```
 *-same : ∀(x y : ℕ) -> x * y ≡ y -> x ≡ 1 ⊎ y ≡ 0
-*-same x               zero     eq = inj₂ refl
-*-same (suc zero)     (suc y) eq = inj₁ refl
-*-same (suc (suc x)) (suc y) eq = {!!} -- ex-falso (+-succ-neq (succ-injective eq))
+*-same x             zero    eq = inj₂ refl
+*-same (suc zero)    (suc y) eq = inj₁ refl
+*-same (suc (suc x)) (suc y) eq = contradiction eq +-suc-neq
 ```
 
 We combine these results to prove that `∣` is antisymmetric.
