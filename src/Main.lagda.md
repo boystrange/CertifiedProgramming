@@ -31,11 +31,11 @@ import Chapter.Intro.Vectors
 
 ```
 import Chapter.Logic.Connectives
+import Chapter.Logic.Negation
 ```
 
 <!--
 ```
--- import Chapter.Logic.Negation
 -- import Chapter.Logic.Existential
 -- import Chapter.Logic.Predicates
 -- import Chapter.Logic.Equality
