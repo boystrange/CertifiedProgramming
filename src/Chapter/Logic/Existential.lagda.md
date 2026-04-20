@@ -11,14 +11,17 @@ module Chapter.Logic.Existential where
 ## Imports
 
 ```
-open import Library.Fun
-open import Library.Bool
-open import Library.Nat
-open import Library.Nat.Properties
-open import Library.List
-open import Library.Equality
-open import Library.Logic hiding (fst; snd)
-open import Library.Logic.Laws
+open import Function using (_∘_)
+open import Data.Bool
+open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
+open import Data.Nat.Properties
+open import Data.List hiding (head; tail)
+open import Data.Sum
+open import Data.Product
+open import Relation.Nullary
+open import Relation.Binary.PropositionalEquality using (refl; _≡_; _≢_; cong; sym; subst)
+-- open import Library.Logic hiding (fst; snd)
+-- open import Library.Logic.Laws
 ```
 
 ## Defining the existential quantifier
@@ -40,10 +43,9 @@ The *non-dependent* pair type can be defined as an instance of a
 sigma type where the type of the second component does *not* depend
 on the value of the first one.
 
-```
-_×_ : Set -> Set -> Set
-A × B = Σ A λ _ -> B
-```
+
+    _×_ : Set -> Set -> Set
+    A × B = Σ A λ _ -> B
 
 The two projections `fst` and `snd` for sigma types are the same we
 have already defined for `_∧_`, except for their type. In
@@ -69,7 +71,7 @@ non-null natural numbers as follows.
 
 ```
 ℕ⁺ : Set
-ℕ⁺ = Σ ℕ (_!= 0)
+ℕ⁺ = Σ ℕ (_≢ 0)
 ```
 
 A non-null natural number, that is an element of the type `ℕ⁺`, is a
@@ -85,7 +87,7 @@ Analogously, we can define the type of non-empty lists as follows.
 
 ```
 List⁺ : Set -> Set
-List⁺ A = Σ (List A) (_!= [])
+List⁺ A = Σ (List A) (_≢ [])
 ```
 
 ## Partial functions
@@ -98,12 +100,12 @@ respectively return the head and the tail of a non-empty list.
 
 ```
 head : ∀{A : Set} -> List⁺ A -> A
-head ([]      , nempty) = ex-falso (nempty refl)
-head (x :: _  , _     ) = x
+head ([]     , nempty) = {!!} -- ex-falso (nempty refl)
+head (x ∷ _  , _     ) = x
 
 tail : ∀{A : Set} -> List⁺ A -> List A
-tail ([]      , nempty) = ex-falso (nempty refl)
-tail (_ :: xs , _     ) = xs
+tail ([]     , nempty) = {!!} -- ex-falso (nempty refl)
+tail (_ ∷ xs , _     ) = xs
 ```
 
 In the definition of `head` and `tail` we perform case analysis on
@@ -145,9 +147,9 @@ pair, which can be automatically inferred by Agda in many
 cases. With the help of this syntax we define `pred` thus.
 
 ```
-pred : ∀(p : ℕ⁺) -> ∃[ x ] fst p == succ x
-pred (zero   , nzero) = ex-falso (nzero refl)
-pred (succ x , _    ) = x , refl
+pred : ∀(p : ℕ⁺) -> ∃[ x ] fst p ≡ suc x
+pred (zero  , nzero) = {!!} -- ex-falso (nzero refl)
+pred (suc x , _    ) = x , refl
 ```
 
 Note the use of `fst` in the type of `pred` to refer to the first
@@ -171,7 +173,7 @@ into `y`.
 
 ```
 _∣_ : ℕ -> ℕ -> Set
-x ∣ y = ∃[ z ] z * x == y
+x ∣ y = ∃[ z ] z * x ≡ y
 ```
 
 For example, the type `2 ∣ 64` is inhabited by the witness `32`
@@ -195,7 +197,7 @@ the proof that `1` is the left unit of multiplication.
 
 ```
 ∣-refl : ∀{x : ℕ} -> x ∣ x
-∣-refl {x} = 1 , *-unit-l x
+∣-refl {x} = 1 , *-identityˡ x
 ```
 
 Concerning transitivity, by pattern matching on the proofs of `x ∣
@@ -207,20 +209,20 @@ purpose.
 
 ```
 ∣-trans : ∀{x y z : ℕ} -> x ∣ y -> y ∣ z -> x ∣ z
-∣-trans (u , refl) (v , refl) = v * u , symm (*-assoc v u _)
+∣-trans (u , refl) (v , refl) = v * u , *-assoc v u _
 ```
 
 Proving that `∣` is antisymmetric requires some more work, including
 some tedious properties of addition and multiplication. We start by
-showing that adding a non-null number `succ y` to `x` cannot yield
+showing that adding a non-null number `suc y` to `x` cannot yield
 `x` and multiplying zero to `x` cannot yield `1`.
 
 ```
-+-succ-neq : ∀{x y : ℕ} -> x + succ y != x
-+-succ-neq {succ x} eq = +-succ-neq (succ-injective eq)
++-suc-neq : ∀{x y : ℕ} -> x + suc y ≢ x
++-suc-neq {suc x} eq = +-suc-neq (suc-injective eq)
 
-*-zero-neq-one : ∀(x : ℕ) -> x * 0 != 1
-*-zero-neq-one (succ x) eq = *-zero-neq-one x eq
+*-zero-neq-one : ∀(x : ℕ) -> x * 0 ≢ 1
+*-zero-neq-one (suc x) eq = *-zero-neq-one x eq
 ```
 
 WARNING `!=` HAS NOT BEEN DEFINED
@@ -229,42 +231,42 @@ Next we show that if the product of two numbers yields `1`, then
 both numbers must be `1`.
 
 ```
-*-one : ∀(x y : ℕ) -> x * y == 1 -> x == 1 ∧ y == 1
-*-one (succ x)        zero            eq = ex-falso (*-zero-neq-one x eq)
-*-one (succ zero)     (succ zero)     eq = refl , refl
-*-one (succ (succ x)) (succ zero)     ()
-*-one (succ (succ x)) (succ (succ y)) ()
+*-one : ∀(x y : ℕ) -> x * y ≡ 1 -> x ≡ 1 × y ≡ 1
+*-one (suc  x)        zero            eq = {!!} -- ex-falso (*-zero-neq-one x eq)
+*-one (suc  zero)     (suc  zero)     eq = refl , refl
+*-one (suc  (suc  x)) (suc  zero)     ()
+*-one (suc  (suc  x)) (suc  (suc  y)) ()
 ```
 
 Then we prove that if the product of `x` and `y` yields `y`, then
 either `x` is `1` or `y` is `0`.
 
 ```
-*-same : ∀(x y : ℕ) -> x * y == y -> x == 1 ∨ y == 0
-*-same x               zero     eq = inr refl
-*-same (succ zero)     (succ y) eq = inl refl
-*-same (succ (succ x)) (succ y) eq = ex-falso (+-succ-neq (succ-injective eq))
+*-same : ∀(x y : ℕ) -> x * y ≡ y -> x ≡ 1 ⊎ y ≡ 0
+*-same x               zero     eq = inj₂ refl
+*-same (suc zero)     (suc y) eq = inj₁ refl
+*-same (suc (suc x)) (suc y) eq = {!!} -- ex-falso (+-succ-neq (succ-injective eq))
 ```
 
 We combine these results to prove that `∣` is antisymmetric.
 
 ```
-∣-antisymm : ∀{x y : ℕ} -> x ∣ y -> y ∣ x -> x == y
-∣-antisymm {x} (u , refl) (v , q) with *-same (v * u) x (subst (_== x) (*-assoc v u x) q)
-... | inr refl = *-zero-r u
-... | inl eq with *-one v u eq
-... | refl , refl = symm (*-unit-l x)
+∣-antisymm : ∀{x y : ℕ} -> x ∣ y -> y ∣ x -> x ≡ y
+∣-antisymm {x} (u , refl) (v , q) with *-same (v * u) x (subst (_≡ x) (sym (*-assoc v u x)) q)
+... | inj₂ refl = {!!} -- *-zero-r u
+... | inj₁ eq with *-one v u eq
+... | refl , refl = sym (*-identityˡ x)
 ```
 
 By pattern matching on the proof of `x ∣ y` we find out a `u` such
-that `u * x == y`. When we pattern match on the proof of `y ∣ x` we
-also find the witness `v` such that `v * y == x`. However, we are
+that `u * x ≡ y`. When we pattern match on the proof of `y ∣ x` we
+also find the witness `v` such that `v * y ≡ x`. However, we are
 unable to also perform case analysis on the proof of this equality
 since the `y` has been unified with `u * x` and `q` is actually a
-proof of `v * (u * x) == x` (the unification fails in this case
+proof of `v * (u * x) ≡ x` (the unification fails in this case
 because `x` occurs on both sides of the equality). We use `subst`
 (WARNING `subst` IS DEFINED LATER) to obtain from `q` a proof of the
-equality `(v * u) * x == x` and now we use `*-same` to deduce that
+equality `(v * u) * x ≡ x` and now we use `*-same` to deduce that
 either `v * u` is `1` or `x` is `0`. In the latter case we conclude
 using the property that `0` absorbs multiplication on the right. In
 the former case, we use `*-one` to deduce that both `u` and `v` must
@@ -273,69 +275,69 @@ multiplication on the left.
 
 ## Exercises
 
-1. Prove the theorem `pred' : ∀(x : ℕ) -> x == 0 ∨ (∃[ y ] x == succ y)`.
+1. Prove the theorem `pred' : ∀(x : ℕ) -> x ≡ 0 ⊎ (∃[ y ] x ≡ suc y)`.
 2. Define the type `ℕ₂` of natural numbers greater that `1`. Show
    that `2` (along with a suitable proof) is an element of `ℕ₂`. Then define
    the succesor on `ℕ₂`, namely the function `succ₂ : ℕ₂ -> ℕ₂`.
 3. Prove that if `x` divides both `y` and `z`, then `x` divides
    `y + z` as well.
-4. Prove the theorem `∣-not-total : ∃[ x ] ∃[ y ] ¬ (x ∣ y) ∧ ¬ (y ∣ x)`.
+4. Prove the theorem `∣-not-total : ∃[ x ] ∃[ y ] ¬ (x ∣ y) × ¬ (y ∣ x)`.
 5. Prove the theorem `last-view : ∀{A : Set} (xs : List A) -> xs !=
-   [] -> ∃[ ys ] ∃[ y ] xs == ys ++ [ y ]`.
-6. Prove the theorem `half : ∀(x : ℕ) -> ∃[ y ] ∃[ z ] x == y * 2 + z
-   ∧ (z == 0 ∨ z == 1)`.
+   [] -> ∃[ ys ] ∃[ y ] xs ≡ ys ++ [ y ]`.
+6. Prove the theorem `half : ∀(x : ℕ) -> ∃[ y ] ∃[ z ] x ≡ y * 2 + z
+   × (z ≡ 0 ⊎ z ≡ 1)`.
 
 
 ```
 -- EXERCISE 1
 
-pred' : ∀(x : ℕ) -> x == 0 ∨ (∃[ y ] x == succ y)
-pred' zero     = inl refl
-pred' (succ x) = inr (x , refl)
+pred' : ∀(x : ℕ) -> x ≡ 0 ⊎ (∃[ y ] x ≡ suc y)
+pred' zero     = inj₁ refl
+pred' (suc x) = inj₂ (x , refl)
 
 -- EXERCISE 2
 
 ℕ₂ : Set
-ℕ₂ = Σ ℕ λ x -> x != 0 ∧ x != 1
+ℕ₂ = Σ ℕ λ x -> x ≢ 0 × x ≢ 1
 
 _ : ℕ₂
 _ = 2 , (λ ()) , (λ ())
 
 succ₂ : ℕ₂ -> ℕ₂
-succ₂ (x , nzero , none) = succ x , (λ ()) , λ { refl -> nzero refl }
+succ₂ (x , nzero , none) = suc x , (λ ()) , λ { refl -> nzero refl }
 
 -- EXERCISE 3
 
 ∣-plus : ∀{x y z : ℕ} -> x ∣ y -> x ∣ z -> x ∣ (y + z)
-∣-plus {x} (u , refl) (v , refl) = u + v , *-dist-r u v x
+∣-plus {x} (u , refl) (v , refl) = u + v , {!!} -- *-dist-r u v x
 
 -- EXERCISE 4
 
-∣-not-total : ∃[ x ] ∃[ y ] ¬ (x ∣ y) ∧ ¬ (y ∣ x)
+∣-not-total : ∃[ x ] ∃[ y ] ¬ (x ∣ y) × ¬ (y ∣ x)
 ∣-not-total = 2 , 3 , f , g
   where
     f : ¬ (2 ∣ 3)
-    f (succ zero     , ())
-    f (succ (succ _) , ())
+    f (suc zero     , ())
+    f (suc (suc _) , ())
 
     g : ¬ (3 ∣ 2)
     g (zero   , ())
-    g (succ _ , ())
+    g (suc _ , ())
 
 -- EXERCISE 5
 
-last-view : ∀{A : Set} (xs : List A) -> xs != [] -> ∃[ ys ] ∃[ y ] xs == ys ++ [ y ]
-last-view []             nempty = ex-falso (nempty refl)
-last-view (x :: [])      nempty = [] , x , refl
-last-view (x :: z :: xs) nempty with last-view (z :: xs) (λ ())
-... | ys , y , eq = x :: ys , y , cong (x ::_) eq
+last-view : ∀{A : Set} (xs : List A) -> xs ≢ [] -> ∃[ ys ] ∃[ y ] xs ≡ ys ++ [ y ]
+last-view []             nempty = {!!} -- ex-falso (nempty refl)
+last-view (x ∷ [])      nempty = [] , x , refl
+last-view (x ∷ z ∷ xs) nempty with last-view (z ∷ xs) (λ ())
+... | ys , y , eq = x ∷ ys , y , cong (x ∷_) eq
 
 -- EXERCISE 6
 
-half : ∀(x : ℕ) -> ∃[ y ] ∃[ z ] x == y * 2 + z ∧ (z == 0 ∨ z == 1)
-half zero            = zero , zero , refl , inl refl
-half (succ zero)     = zero , 1 , refl , inr refl
-half (succ (succ x)) with half x
-... | y , z , eq , zr = succ y , z , cong (succ ∘ succ) eq , zr
+half : ∀(x : ℕ) -> ∃[ y ] ∃[ z ] x ≡ y * 2 + z × (z ≡ 0 ⊎ z ≡ 1)
+half zero            = zero , zero , refl , inj₁ refl
+half (suc zero)     = zero , 1 , refl , inj₂ refl
+half (suc (suc x)) with half x
+... | y , z , eq , zr = suc y , z , cong (suc ∘ suc) eq , zr
 ```
 {:.solution}
