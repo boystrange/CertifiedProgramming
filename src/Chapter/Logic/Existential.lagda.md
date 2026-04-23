@@ -247,7 +247,7 @@ We combine these results to prove that `∣` is antisymmetric.
 ```
 ∣-antisymm : ∀{x y : ℕ} -> x ∣ y -> y ∣ x -> x ≡ y
 ∣-antisymm {x} (u , refl) (v , q) with *-same (v * u) x (subst (_≡ x) (sym (*-assoc v u x)) q)
-... | inj₂ refl = {!!} -- *-zero-r u
+... | inj₂ refl = sym (*-zeroʳ u)
 ... | inj₁ eq with *-one v u eq
 ... | refl , refl = sym (*-identityˡ x)
 ```
@@ -303,7 +303,7 @@ succ₂ (x , nzero , none) = suc x , (λ ()) , λ { refl -> nzero refl }
 -- EXERCISE 3
 
 ∣-plus : ∀{x y z : ℕ} -> x ∣ y -> x ∣ z -> x ∣ (y + z)
-∣-plus {x} (u , refl) (v , refl) = u + v , {!!} -- *-dist-r u v x
+∣-plus {x} (u , refl) (v , refl) = u + v , *-distribʳ-+ x u v
 
 -- EXERCISE 4
 
@@ -321,8 +321,8 @@ succ₂ (x , nzero , none) = suc x , (λ ()) , λ { refl -> nzero refl }
 -- EXERCISE 5
 
 last-view : ∀{A : Set} (xs : List A) -> xs ≢ [] -> ∃[ ys ] ∃[ y ] xs ≡ ys ++ [ y ]
-last-view []             nempty = {!!} -- ex-falso (nempty refl)
-last-view (x ∷ [])      nempty = [] , x , refl
+last-view []           nempty = contradiction refl nempty
+last-view (x ∷ [])     nempty = [] , x , refl
 last-view (x ∷ z ∷ xs) nempty with last-view (z ∷ xs) (λ ())
 ... | ys , y , eq = x ∷ ys , y , cong (x ∷_) eq
 
