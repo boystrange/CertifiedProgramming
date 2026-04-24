@@ -76,8 +76,8 @@ Let us start with symmetry. The property that we want to prove is
 stated as follows.
 
 ```
-symm : ∀{A : Set} {x y : A} → x ≡ y → y ≡ x
-symm {_} {x} {y} eq = {!!}
+sym : ∀{A : Set} {x y : A} → x ≡ y → y ≡ x
+sym {_} {x} {y} eq = {!!}
 ```
 
 For the sake of illustration, we have given names to the implicit
@@ -90,8 +90,8 @@ recall that equality is an inductively defined data type. As such,
 we can perform case analysis on `eq`.
 
 ```
-symm₁ : ∀{A : Set} {x y : A} → x ≡ y → y ≡ x
-symm₁ {_} {x} {y} refl = {!!}
+sym₁ : ∀{A : Set} {x y : A} → x ≡ y → y ≡ x
+sym₁ {_} {x} {y} refl = {!!}
 ```
 
 As expected, the `eq` argument has turned into `refl`. However, case
@@ -111,8 +111,8 @@ means that we are now able to complete the proof, since `refl` will
 provide evidence of the fact that `x` is equal to itself.
 
 ```
-symm₂ : ∀{A : Set} {x y : A} → x ≡ y → y ≡ x
-symm₂ {_} {x} {y} refl = refl
+sym₂ : ∀{A : Set} {x y : A} → x ≡ y → y ≡ x
+sym₂ {_} {x} {y} refl = refl
 ```
 
 The proof that equality is transitive follows a similar pattern.
