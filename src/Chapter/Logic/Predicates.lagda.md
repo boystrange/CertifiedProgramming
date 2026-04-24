@@ -31,9 +31,9 @@ Consider the following function which computes the (truncated) half
 of a natural number:
 
 ```
-half : ℕ -> ℕ
-half zero            = zero
-half (suc zero)     = zero
+half : ℕ → ℕ
+half zero          = zero
+half (suc zero)    = zero
 half (suc (suc x)) = suc (half x)
 ```
 
@@ -53,7 +53,7 @@ since it is the approach that any (functional) programmer would
 choose in the first place.
 
 ```
-Even-p : ℕ -> Bool
+Even-p : ℕ → Bool
 Even-p zero          = true
 Even-p (suc zero)    = false
 Even-p (suc (suc x)) = Even-p x
@@ -65,7 +65,7 @@ use `Even-p` as a predicate, we have to compare the result of
 theorem as follows.
 
 ```
-theorem-p : ∀{x : ℕ} (ev : Even-p x ≡ true) -> x ≡ half x * 2
+theorem-p : ∀{x : ℕ} → Even-p x ≡ true → x ≡ half x * 2
 theorem-p {zero}        refl = refl
 theorem-p {suc (suc x)} ev   = cong (suc ∘ suc) (theorem-p ev)
 ```
@@ -88,7 +88,7 @@ property that we can specify in Agda using an existential type. So,
 we can define this notion of evenness as follows.
 
 ```
-Even-m : ℕ -> Set
+Even-m : ℕ → Set
 Even-m x = ∃[ y ] x ≡ y * 2
 ```
 
@@ -119,10 +119,10 @@ yields `y`. For this, we need to prove an auxiliary lemma, which we
 locally define within `theorem-m` after the keyword `where`.
 
 ```
-theorem-m : ∀{x : ℕ} (ev : Even-m x) -> x ≡ half x * 2
+theorem-m : ∀{x : ℕ} → Even-m x → x ≡ half x * 2
 theorem-m (y , refl) = cong (_* 2) (lem y)
   where
-    lem : (x : ℕ) -> x ≡ half (x * 2)
+    lem : (x : ℕ) → x ≡ half (x * 2)
     lem zero     = refl
     lem (suc x) = cong suc (lem x)
 ```
@@ -140,7 +140,7 @@ because it computes a type (`Even-r x`) from a term `x` (technically
 speaking, also `Even-m` is defined in this way).
 
 ```
-Even-r : ℕ -> Set
+Even-r : ℕ → Set
 Even-r zero            = ⊤
 Even-r (suc zero)     = ⊥
 Even-r (suc (suc x)) = Even-r x
@@ -154,7 +154,7 @@ reveal anything useful about `x` and we are forced to perform case
 analysis on `x` to complete our theorem.
 
 ```
-theorem-r : ∀{x : ℕ} (ev : Even-r x) -> x ≡ half x * 2
+theorem-r : ∀{x : ℕ} → Even-r x → x ≡ half x * 2
 theorem-r {zero}        tt = refl
 theorem-r {suc (suc x)} ev = cong (suc ∘ suc) (theorem-r ev)
 ```
@@ -203,12 +203,12 @@ parametric) data type as it contains one or more **indexes**. In our
 case, a single index of type `ℕ` suffices.
 
 ```
-data Even-i : ℕ -> Set where
+data Even-i : ℕ → Set where
   even-zero : Even-i 0
-  even-suc  : {x : ℕ} -> Even-i x -> Even-i (2 + x)
+  even-suc  : {x : ℕ} → Even-i x → Even-i (2 + x)
 ```
 
-The type of `Even-i` is `ℕ -> Set` and not just `Set`, namely
+The type of `Even-i` is `ℕ → Set` and not just `Set`, namely
 `Even-i` is a function that, applied to some natural number `x`,
 yields a type. The `x` is the index of `Even-i`. There are two ways
 of building terms of type `Even-i x`. One is through the constructor
@@ -232,7 +232,7 @@ analysis directly on `Even-i x`, which contains all the structure we
 need.
 
 ```
-theorem-i : ∀{x : ℕ} (ev : Even-i x) -> x ≡ half x * 2
+theorem-i : ∀{x : ℕ} → Even-i x → x ≡ half x * 2
 theorem-i even-zero     = refl
 theorem-i (even-suc ev) = cong (suc ∘ suc) (theorem-i ev)
 ```
@@ -244,7 +244,7 @@ theorem-i (even-suc ev) = cong (suc ∘ suc) (theorem-i ev)
    x`, that `Even-r x` implies `Even-i x`, that `Even-i x` implies
    `Even-m x` and that `Even-m x` implies `Even-p x ≡ true`.
 2. Prove that `x ≡ 1 + x /2 * 2` when `¬ Even-i x` holds.
-3. Prove that `Even-i` is decidable, namely the theorem `∀(x : ℕ) ->
+3. Prove that `Even-i` is decidable, namely the theorem `∀(x : ℕ) →
    ¬ Even-i x ⊎ Even-i x`.
 4. Define an indexed data type `Odd-i` analogous to `Even-i` but
    such that `Odd-i x` holds if and only if `x` is odd. Prove that
@@ -258,39 +258,39 @@ theorem-i (even-suc ev) = cong (suc ∘ suc) (theorem-i ev)
 ```
 -- EXERCISE 1
 
-p=>r : ∀(x : ℕ) -> Even-p x ≡ true -> Even-r x
+p=>r : ∀(x : ℕ) → Even-p x ≡ true → Even-r x
 p=>r zero            eq = tt
 p=>r (suc (suc x)) eq = p=>r x eq
 
-r=>i : ∀(x : ℕ) -> Even-r x -> Even-i x
+r=>i : ∀(x : ℕ) → Even-r x → Even-i x
 r=>i zero            ev = even-zero
 r=>i (suc (suc x)) ev = even-suc (r=>i x ev)
 
-i=>m : ∀{x : ℕ} -> Even-i x -> Even-m x
+i=>m : ∀{x : ℕ} → Even-i x → Even-m x
 i=>m even-zero = 0 , refl
 i=>m (even-suc ev) with i=>m ev
 ... | y , refl = suc y , refl
 
-m=>p : ∀{x : ℕ} -> Even-m x -> Even-p x ≡ true
+m=>p : ∀{x : ℕ} → Even-m x → Even-p x ≡ true
 m=>p (y , refl) = lem y
   where
-    lem : ∀(y : ℕ) -> Even-p (y * 2) ≡ true
+    lem : ∀(y : ℕ) → Even-p (y * 2) ≡ true
     lem zero     = refl
     lem (suc y) = lem y
 
 -- EXERCISE 2
 
-not-even : ∀(x : ℕ) -> ¬ Even-i x -> x ≡ 1 + half x * 2
+not-even : ∀(x : ℕ) → ¬ Even-i x → x ≡ 1 + half x * 2
 not-even zero          nev = contradiction even-zero nev
 not-even (suc zero)    nev = refl
 not-even (suc (suc x)) nev = cong (suc ∘ suc) (not-even x (lem x nev))
   where
-    lem : ∀(x : ℕ) -> ¬ Even-i (2 + x) -> ¬ Even-i x
+    lem : ∀(x : ℕ) → ¬ Even-i (2 + x) → ¬ Even-i x
     lem x nev ev = nev (even-suc ev)
 
 -- EXERCISE 3
 
-Even? : ∀(x : ℕ) -> ¬ Even-i x ⊎ Even-i x
+Even? : ∀(x : ℕ) → ¬ Even-i x ⊎ Even-i x
 Even? zero          = inj₂ even-zero
 Even? (suc zero)    = inj₁ λ ()
 Even? (suc (suc x)) with Even? x
@@ -299,9 +299,9 @@ Even? (suc (suc x)) with Even? x
 
 -- EXERCISE 4
 
-data Odd-i : ℕ -> Set where
+data Odd-i : ℕ → Set where
   odd-one  : Odd-i 1
-  odd-suc : ∀{x : ℕ} -> Odd-i x -> Odd-i (2 + x)
+  odd-suc : ∀{x : ℕ} → Odd-i x → Odd-i (2 + x)
 
 _ : Odd-i 5
 _ = odd-suc (odd-suc odd-one)
@@ -311,21 +311,21 @@ _ = λ { (odd-suc ()) }
 
 -- EXERCISE 5
 
-even-or-odd : ∀(x : ℕ) -> Even-i x ⊎ Odd-i x
+even-or-odd : ∀(x : ℕ) → Even-i x ⊎ Odd-i x
 even-or-odd zero            = inj₁ even-zero
 even-or-odd (suc zero)     = inj₂ odd-one
 even-or-odd (suc (suc x)) with even-or-odd x
 ... | inj₁ ev = inj₁ (even-suc ev)
 ... | inj₂ od = inj₂ (odd-suc od)
 
-even-and-odd : ∀(x : ℕ) -> ¬ (Even-i x × Odd-i x)
+even-and-odd : ∀(x : ℕ) → ¬ (Even-i x × Odd-i x)
 even-and-odd zero            (_  , ())
 even-and-odd (suc zero)     (() , _ )
 even-and-odd (suc (suc x)) (even-suc ev , odd-suc od) = even-and-odd x (ev , od)
 
 -- EXERCISE 6
 
-odd : ∀{x : ℕ} -> Odd-i x -> x ≡ 1 + half x * 2
+odd : ∀{x : ℕ} → Odd-i x → x ≡ 1 + half x * 2
 odd {x} od = not-even x (contraposition (_, od) (even-and-odd x))
 ```
 {:.solution}

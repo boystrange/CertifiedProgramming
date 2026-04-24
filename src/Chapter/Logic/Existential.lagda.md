@@ -276,7 +276,7 @@ multiplication on the left.
 3. Prove that if `x` divides both `y` and `z`, then `x` divides
    `y + z` as well.
 4. Prove the theorem `∣-not-total : ∃[ x ] ∃[ y ] ¬ (x ∣ y) × ¬ (y ∣ x)`.
-5. Prove the theorem `last-view : ∀{A : Set} (xs : List A) → xs !=
+5. Prove the theorem `last-view : ∀{A : Set} (xs : List A) → xs ≢
    [] → ∃[ ys ] ∃[ y ] xs ≡ ys ++ [ y ]`.
 6. Prove the theorem `half : ∀(x : ℕ) → ∃[ y ] ∃[ z ] x ≡ y * 2 + z
    × (z ≡ 0 ⊎ z ≡ 1)`.
