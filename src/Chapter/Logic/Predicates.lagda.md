@@ -54,8 +54,8 @@ choose in the first place.
 
 ```
 Even-p : ℕ -> Bool
-Even-p zero            = true
-Even-p (suc zero)     = false
+Even-p zero          = true
+Even-p (suc zero)    = false
 Even-p (suc (suc x)) = Even-p x
 ```
 
@@ -66,7 +66,7 @@ theorem as follows.
 
 ```
 theorem-p : ∀{x : ℕ} (ev : Even-p x ≡ true) -> x ≡ half x * 2
-theorem-p {zero}          refl = refl
+theorem-p {zero}        refl = refl
 theorem-p {suc (suc x)} ev   = cong (suc ∘ suc) (theorem-p ev)
 ```
 
@@ -149,13 +149,13 @@ Even-r (suc (suc x)) = Even-r x
 Compared to `Even-p`, the advantage of `Even-r` is that it yields a
 type, so it is not necessary to use equality to turn `Even-r x` into
 a type. However, just like when using `Even-p`, the proof of `Even-r
-x` is simply `<>`, so inspecting the proof of `Even-r x` does not
+x` is simply `tt`, so inspecting the proof of `Even-r x` does not
 reveal anything useful about `x` and we are forced to perform case
 analysis on `x` to complete our theorem.
 
 ```
 theorem-r : ∀{x : ℕ} (ev : Even-r x) -> x ≡ half x * 2
-theorem-r {zero}          <> = refl
+theorem-r {zero}        tt = refl
 theorem-r {suc (suc x)} ev = cong (suc ∘ suc) (theorem-r ev)
 ```
 
@@ -177,12 +177,12 @@ In other words, we can characterize the whole set of even numbers as
 those satisfying the predicate `Even x`, where `Even` is inductively
 defined by the following inference rules.
 
-                                         Even x
-    [even-zero] ------    [even-succ] ------------
-                Even 0                Even (2 + x)
+                                        Even x
+    [even-zero] ------    [even-suc] ------------
+                Even 0               Even (2 + x)
 
 The axiom `[even-zero]` asserts that `0` is an even number. The rule
-`[even-succ]` asserts that `2 + x` is even whenever `x` is. We can
+`[even-suc]` asserts that `2 + x` is even whenever `x` is. We can
 define this inference system as an inductive data type such that
 
 * the name of the data type (`Even-i`) corresponds to the name of
@@ -197,7 +197,7 @@ cannot express this dependency merely using a parameter of the data
 type, since parameters are supposed to be the same across the whole
 data type definition whereas the value of `x` varies (e.g., it is
 `0` in `[even-zero]` and it is `x` and `2 + x` in
-`[even-succ]`). For this reason, we define an **indexed data type**
+`[even-suc]`). For this reason, we define an **indexed data type**
 (also known as **inductive family**), which differs from a plain (or
 parametric) data type as it contains one or more **indexes**. In our
 case, a single index of type `ℕ` suffices.
@@ -205,7 +205,7 @@ case, a single index of type `ℕ` suffices.
 ```
 data Even-i : ℕ -> Set where
   even-zero : Even-i 0
-  even-suc : {x : ℕ} -> Even-i x -> Even-i (2 + x)
+  even-suc  : {x : ℕ} -> Even-i x -> Even-i (2 + x)
 ```
 
 The type of `Even-i` is `ℕ -> Set` and not just `Set`, namely
@@ -213,7 +213,7 @@ The type of `Even-i` is `ℕ -> Set` and not just `Set`, namely
 yields a type. The `x` is the index of `Even-i`. There are two ways
 of building terms of type `Even-i x`. One is through the constructor
 `even-zero`. In this case `x` must be `0`. The other is through the
-constructor `even-succ` applied to a term of type `Even-i x`, which
+constructor `even-suc` applied to a term of type `Even-i x`, which
 yields a term of type `Even-i (2 + x)`.
 
 As an example, we can prove that `4` is even and that `1` is not as
@@ -233,7 +233,7 @@ need.
 
 ```
 theorem-i : ∀{x : ℕ} (ev : Even-i x) -> x ≡ half x * 2
-theorem-i even-zero      = refl
+theorem-i even-zero     = refl
 theorem-i (even-suc ev) = cong (suc ∘ suc) (theorem-i ev)
 ```
 
@@ -245,11 +245,11 @@ theorem-i (even-suc ev) = cong (suc ∘ suc) (theorem-i ev)
    `Even-m x` and that `Even-m x` implies `Even-p x ≡ true`.
 2. Prove that `x ≡ 1 + x /2 * 2` when `¬ Even-i x` holds.
 3. Prove that `Even-i` is decidable, namely the theorem `∀(x : ℕ) ->
-   Decidable (Even-i x)`.
+   ¬ Even-i x ⊎ Even-i x`.
 4. Define an indexed data type `Odd-i` analogous to `Even-i` but
    such that `Odd-i x` holds if and only if `x` is odd. Prove that
    `5` is odd and `2` is not.
-5. Prove that `Even-i x ∨ Odd-i x` holds and that `Even-i x ∧ Odd-i
+5. Prove that `Even-i x ⊎ Odd-i x` holds and that `Even-i x × Odd-i
    x` does not for every `x`.
 6. Prove that `Odd-i x` implies `x ≡ 1 + x/2 * 2` without using
    recursion, but reusing the results of exercises 2 and 4.
