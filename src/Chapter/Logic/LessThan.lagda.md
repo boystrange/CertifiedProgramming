@@ -140,7 +140,7 @@ too.
 Concerning **transitivity**, it is convenient to perform case
 analysis on the proofs of `x ≤ y` and `y ≤ z`. Note that, when the
 former relation is proved by `s≤s`, the second relation can only be
-proved by `s≤s` because `y` has the form `suc z`.
+proved by `s≤s` because `y` has the form `suc y'`.
 
 ```
 ≤-trans : ∀{x y z : ℕ} → x ≤ y → y ≤ z → x ≤ z
