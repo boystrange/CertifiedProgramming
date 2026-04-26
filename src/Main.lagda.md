@@ -35,11 +35,7 @@ import Chapter.Logic.Negation
 import Chapter.Logic.Existential
 import Chapter.Logic.Predicates
 import Chapter.Logic.Equality
-```
-
-<!--
-```
--- import Chapter.Logic.LessThan
+import Chapter.Logic.LessThan
 ```
 
 ## Verification of functional programs
