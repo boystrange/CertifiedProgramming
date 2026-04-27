@@ -38,6 +38,7 @@ import Chapter.Logic.Equality
 import Chapter.Logic.LessThan
 ```
 
+<!--
 ## Verification of functional programs
 
 ```
