@@ -1,10 +1,10 @@
 ---
 title: Inequality
-prev:  Chapter.Logic.Equality
+next:  Chapter.Fun.SortedLists
 ---
 
 ```
-module Chapter.Logic.LessThan where
+module Chapter.Fun.LessThan where
 ```
 
 In this section we define the non-strict inequality relation on

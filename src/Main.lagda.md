@@ -35,14 +35,17 @@ import Chapter.Logic.Negation
 import Chapter.Logic.Existential
 import Chapter.Logic.Predicates
 import Chapter.Logic.Equality
-import Chapter.Logic.LessThan
+```
+
+## Verification of insertion sort
+
+```
+import Chapter.Fun.LessThan
+import Chapter.Fun.SortedLists
 ```
 
 <!--
-## Verification of functional programs
-
 ```
--- import Chapter.Fun.SortedLists
 -- import Chapter.Fun.ExtrinsicInsertionSort
 -- import Chapter.Fun.IntrinsicInsertionSort
 ```

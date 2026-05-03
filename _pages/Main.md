@@ -28,44 +28,46 @@ title: Table of contents
 <a id="491" class="Keyword">import</a> <a id="498" href="Chapter.Logic.Existential.html" class="Module">Chapter.Logic.Existential</a>
 <a id="524" class="Keyword">import</a> <a id="531" href="Chapter.Logic.Predicates.html" class="Module">Chapter.Logic.Predicates</a>
 <a id="556" class="Keyword">import</a> <a id="563" href="Chapter.Logic.Equality.html" class="Module">Chapter.Logic.Equality</a>
-<a id="586" class="Keyword">import</a> <a id="593" href="Chapter.Logic.LessThan.html" class="Module">Chapter.Logic.LessThan</a>
 </pre>
-## Verification of functional programs
+## Verification of insertion sort
 
-<pre class="Agda"><a id="665" class="Comment">-- import Chapter.Fun.SortedLists</a>
-<a id="699" class="Comment">-- import Chapter.Fun.ExtrinsicInsertionSort</a>
-<a id="744" class="Comment">-- import Chapter.Fun.IntrinsicInsertionSort</a>
+<pre class="Agda"><a id="630" class="Keyword">import</a> <a id="637" href="Chapter.Fun.LessThan.html" class="Module">Chapter.Fun.LessThan</a>
+<a id="658" class="Keyword">import</a> <a id="665" href="Chapter.Fun.SortedLists.html" class="Module">Chapter.Fun.SortedLists</a>
+</pre>
+<!--
+<pre class="Agda"><a id="703" class="Comment">-- import Chapter.Fun.ExtrinsicInsertionSort</a>
+<a id="748" class="Comment">-- import Chapter.Fun.IntrinsicInsertionSort</a>
 </pre>-->
 
 ## Epilogue
 
-<pre class="Agda"><a id="815" class="Keyword">import</a> <a id="822" href="Chapter.Epilogue.Emacs.html" class="Module">Chapter.Epilogue.Emacs</a>
-<a id="845" class="Keyword">import</a> <a id="852" href="Chapter.Epilogue.Symbols.html" class="Module">Chapter.Epilogue.Symbols</a>
+<pre class="Agda"><a id="819" class="Keyword">import</a> <a id="826" href="Chapter.Epilogue.Emacs.html" class="Module">Chapter.Epilogue.Emacs</a>
+<a id="849" class="Keyword">import</a> <a id="856" href="Chapter.Epilogue.Symbols.html" class="Module">Chapter.Epilogue.Symbols</a>
 </pre>
 <!--
-<pre class="Agda"><a id="891" class="Comment">-- import Chapter.Fun.RedBlackTree</a>
-<a id="926" class="Comment">-- import Chapter.Fun.RegularExpressions</a>
-<a id="967" class="Comment">-- import Chapter.Fun.Division</a>
-<a id="998" class="Comment">-- import Chapter.Fun.QuickSort</a>
+<pre class="Agda"><a id="895" class="Comment">-- import Chapter.Fun.RedBlackTree</a>
+<a id="930" class="Comment">-- import Chapter.Fun.RegularExpressions</a>
+<a id="971" class="Comment">-- import Chapter.Fun.Division</a>
+<a id="1002" class="Comment">-- import Chapter.Fun.QuickSort</a>
 </pre>
 ## Appendix: mini Agda library
 
-<pre class="Agda"><a id="1071" class="Comment">-- import Library.Bool</a>
-<a id="1094" class="Comment">-- import Library.Equality</a>
-<a id="1121" class="Comment">-- import Library.Equality.Reasoning</a>
-<a id="1158" class="Comment">-- import Library.Fun</a>
-<a id="1180" class="Comment">-- import Library.LessThan</a>
-<a id="1207" class="Comment">-- import Library.LessThan.Alternative</a>
-<a id="1246" class="Comment">-- import Library.LessThan.Reasoning</a>
-<a id="1283" class="Comment">-- import Library.List</a>
-<a id="1306" class="Comment">-- import Library.List.Permutation</a>
-<a id="1341" class="Comment">-- import Library.List.Properties</a>
-<a id="1375" class="Comment">-- import Library.List.Sorted</a>
-<a id="1405" class="Comment">-- import Library.Logic</a>
-<a id="1429" class="Comment">-- import Library.Logic.Laws</a>
-<a id="1458" class="Comment">-- import Library.Nat</a>
-<a id="1480" class="Comment">-- import Library.Nat.Properties</a>
-<a id="1513" class="Comment">-- import Library.WellFounded</a>
+<pre class="Agda"><a id="1075" class="Comment">-- import Library.Bool</a>
+<a id="1098" class="Comment">-- import Library.Equality</a>
+<a id="1125" class="Comment">-- import Library.Equality.Reasoning</a>
+<a id="1162" class="Comment">-- import Library.Fun</a>
+<a id="1184" class="Comment">-- import Library.LessThan</a>
+<a id="1211" class="Comment">-- import Library.LessThan.Alternative</a>
+<a id="1250" class="Comment">-- import Library.LessThan.Reasoning</a>
+<a id="1287" class="Comment">-- import Library.List</a>
+<a id="1310" class="Comment">-- import Library.List.Permutation</a>
+<a id="1345" class="Comment">-- import Library.List.Properties</a>
+<a id="1379" class="Comment">-- import Library.List.Sorted</a>
+<a id="1409" class="Comment">-- import Library.Logic</a>
+<a id="1433" class="Comment">-- import Library.Logic.Laws</a>
+<a id="1462" class="Comment">-- import Library.Nat</a>
+<a id="1484" class="Comment">-- import Library.Nat.Properties</a>
+<a id="1517" class="Comment">-- import Library.WellFounded</a>
 </pre>
 -->
 
