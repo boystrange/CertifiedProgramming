@@ -33,44 +33,14 @@ title: Table of contents
 
 <pre class="Agda"><a id="630" class="Keyword">import</a> <a id="637" href="Chapter.Fun.LessThan.html" class="Module">Chapter.Fun.LessThan</a>
 <a id="658" class="Keyword">import</a> <a id="665" href="Chapter.Fun.SortedLists.html" class="Module">Chapter.Fun.SortedLists</a>
+<a id="689" class="Keyword">import</a> <a id="696" href="Chapter.Fun.ExtrinsicInsertionSort.html" class="Module">Chapter.Fun.ExtrinsicInsertionSort</a>
+<a id="731" class="Keyword">import</a> <a id="738" href="Chapter.Fun.IntrinsicInsertionSort.html" class="Module">Chapter.Fun.IntrinsicInsertionSort</a>
 </pre>
-<!--
-<pre class="Agda"><a id="703" class="Comment">-- import Chapter.Fun.ExtrinsicInsertionSort</a>
-<a id="748" class="Comment">-- import Chapter.Fun.IntrinsicInsertionSort</a>
-</pre>-->
-
 ## Epilogue
 
-<pre class="Agda"><a id="819" class="Keyword">import</a> <a id="826" href="Chapter.Epilogue.Emacs.html" class="Module">Chapter.Epilogue.Emacs</a>
-<a id="849" class="Keyword">import</a> <a id="856" href="Chapter.Epilogue.Symbols.html" class="Module">Chapter.Epilogue.Symbols</a>
+<pre class="Agda"><a id="795" class="Keyword">import</a> <a id="802" href="Chapter.Epilogue.Emacs.html" class="Module">Chapter.Epilogue.Emacs</a>
+<a id="825" class="Keyword">import</a> <a id="832" href="Chapter.Epilogue.Symbols.html" class="Module">Chapter.Epilogue.Symbols</a>
 </pre>
-<!--
-<pre class="Agda"><a id="895" class="Comment">-- import Chapter.Fun.RedBlackTree</a>
-<a id="930" class="Comment">-- import Chapter.Fun.RegularExpressions</a>
-<a id="971" class="Comment">-- import Chapter.Fun.Division</a>
-<a id="1002" class="Comment">-- import Chapter.Fun.QuickSort</a>
-</pre>
-## Appendix: mini Agda library
-
-<pre class="Agda"><a id="1075" class="Comment">-- import Library.Bool</a>
-<a id="1098" class="Comment">-- import Library.Equality</a>
-<a id="1125" class="Comment">-- import Library.Equality.Reasoning</a>
-<a id="1162" class="Comment">-- import Library.Fun</a>
-<a id="1184" class="Comment">-- import Library.LessThan</a>
-<a id="1211" class="Comment">-- import Library.LessThan.Alternative</a>
-<a id="1250" class="Comment">-- import Library.LessThan.Reasoning</a>
-<a id="1287" class="Comment">-- import Library.List</a>
-<a id="1310" class="Comment">-- import Library.List.Permutation</a>
-<a id="1345" class="Comment">-- import Library.List.Properties</a>
-<a id="1379" class="Comment">-- import Library.List.Sorted</a>
-<a id="1409" class="Comment">-- import Library.Logic</a>
-<a id="1433" class="Comment">-- import Library.Logic.Laws</a>
-<a id="1462" class="Comment">-- import Library.Nat</a>
-<a id="1484" class="Comment">-- import Library.Nat.Properties</a>
-<a id="1517" class="Comment">-- import Library.WellFounded</a>
-</pre>
--->
-
 ## References
 
 This course material is partially based on and inspired by the

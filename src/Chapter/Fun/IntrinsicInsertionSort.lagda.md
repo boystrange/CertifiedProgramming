@@ -16,7 +16,7 @@ yields a permutation of the original list
 (`insertion-sort-permutation`) as separate elements. It is easy to
 observe that these elements are structurally related. In particular,
 most proofs must perform a case analysis on an application of
-`le-total` because that is the way in which the `insert` function is
+`≤-total` because that is the way in which the `insert` function is
 defined. As a consequence, there is a certain amount of redundancy
 in the proofs.
 
@@ -30,10 +30,11 @@ smaller, although the code itself is necessarily more convoluted.
 ## Imports
 
 ```
-open import Library.Logic
-open import Library.Nat
-open import Library.List
-open import Library.LessThan
+open import Data.Nat using (ℕ; zero; suc; _≤_)
+open import Data.Nat.Properties using (≤-total)
+open import Data.List using (List; []; _∷_; [_])
+open import Data.Product
+open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Chapter.Fun.SortedLists
 ```
 
@@ -45,12 +46,12 @@ insertion operation, which we specify thus.
 
 ```
 intrinsic-insert : ∀(x : ℕ) (ys : List ℕ) -> Sorted ys ->
-                   ∃[ zs ] zs # x :: ys ∧ Sorted zs
+                   ∃[ zs ] zs # x ∷ ys × Sorted zs
 ```
 
 In words, the insert operation applied to a number `x` and a sorted
 list `ys` yields another sorted list `zs` that is a permutation of
-`x :: ys`. Note that now the function takes not only the element and
+`x ∷ ys`. Note that now the function takes not only the element and
 the list on which it operates, but also a proof that the list is
 sorted.
 
@@ -58,7 +59,7 @@ The base case in which `ys` is empty is handled by the following
 equation.
 
 ```
-intrinsic-insert x [] sorted-[] = [ x ] , #refl , sorted-:: lb-[] sorted-[]
+intrinsic-insert x [] sorted-[] = [ x ] , #refl , singleton-sorted x
 ```
 
 Remeber that a proof of an existential quantification `∃[ x ] P` is
@@ -66,58 +67,57 @@ a pair consisting of a witness and a proof that the witness
 satisfies `P`. In this case, the predicate `P` is a conjunction
 whose proof is itself a pair. For this reason, `intrinsic-insert`
 yields a *triple* made of the witness, which is the singleton list
-`[ x ]`, a proof that `[ x ]` is a permutation of `x :: []` and a
+`[ x ]`, a proof that `[ x ]` is a permutation of `x ∷ []` and a
 proof that `[ x ]` is sorted. Recall from the definition of `[_]`
-that `[ x ]` and `x :: []` are definitionally equal, so `#refl`
+that `[ x ]` and `x ∷ []` are definitionally equal, so `#refl`
 suffices to prove that they are one the permutation of the other.
 
-When we are inserting `x` in a non-empty list `y :: ys` we have to
+When we are inserting `x` in a non-empty list `y ∷ ys` we have to
 establish the relationship between `x` and `y`, which we do by
-performing case analysis on `le-total x y`.
+performing case analysis on `≤-total x y`.
 
 ```
-intrinsic-insert x (y :: ys) (sorted-:: y≤ys ys-sorted) with le-total x y
+intrinsic-insert x (y ∷ ys) (sorted-∷ y≤ys ys-sorted) with ≤-total x y
 ```
 
 Since the list in which we are inserting `x` is not empty, the proof
-that it is sorted must have the form `sorted-:: y≤ys ys-sorted`,
+that it is sorted must have the form `sorted-∷ y≤ys ys-sorted`,
 which contains a sub-proof that `y` is a lower bound for `ys` and
 that `ys` is itself sorted. Let us now consider the case in which `x
-<= y`.
+≤ y`.
 
 ```
-... | inl x≤y = x :: y :: ys ,
-                #refl ,
-                sorted-:: (lb-:: x≤y (lower-lower-bound x≤y y≤ys))
-                          (sorted-:: y≤ys ys-sorted)
+... | inj₁ x≤y = x ∷ y ∷ ys ,
+                 #refl ,
+                 sorted-∷ (lb-∷ x≤y (lower-lower-bound x≤y y≤ys))
+                          (sorted-∷ y≤ys ys-sorted)
 ```
 
 Here `x` is inserted just at the front of the list, so no swapping
 is necessary and `#refl` suffices as far as permutations are
 concerned. In order to prove that the resulting list is sorted we
-need a proof that `x` is a lower bound for `y :: ys`, which we
+need a proof that `x` is a lower bound for `y ∷ ys`, which we
 obtain from the proof that `y` is a lower bound for `ys` along with
 the hypothesis `x≤y` using the `lower-lower-bound` lemma that we
 have proved in a previous chapter.
 
 ```
-... | inr y≤x with intrinsic-insert x ys ys-sorted
+... | inj₂ y≤x with intrinsic-insert x ys ys-sorted
 ```
 
-If `y <= x`, then we have to insert `x` in `ys`. This operation will
+If `y ≤ x`, then we have to insert `x` in `ys`. This operation will
 not only return the resulting list `zs`, but also a proof `π` that
-`zs` is a permutation of `x :: ys` and a proof `zs-sorted` that `zs`
+`zs` is a permutation of `x ∷ ys` and a proof `zs-sorted` that `zs`
 is sorted. We combine these proofs in the result of the function.
 
 ```
 ... | zs , π , zs-sorted =
-  y :: zs ,
+  y ∷ zs ,
   (#begin
-    y :: zs      #⟨ #cong π ⟩
-    y :: x :: ys #⟨ #swap ⟩
-    x :: y :: ys
-  #end) ,
-  sorted-:: (lower-bound-permutation π (lb-:: y≤x y≤ys)) zs-sorted
+    y ∷ zs     #⟨ #cong π ⟩
+    y ∷ x ∷ ys #⟨ #swap ⟩
+    x ∷ y ∷ ys #∎) ,
+  sorted-∷ (lower-bound-permutation π (lb-∷ y≤x y≤ys)) zs-sorted
 ```
 
 ## Intrinsically verified insertion sort
@@ -141,7 +141,7 @@ In the inductive case, first of all we recursively sort the tail of
 the list.
 
 ```
-verified-insertion-sort (x :: xs) with verified-insertion-sort xs
+verified-insertion-sort (x ∷ xs) with verified-insertion-sort xs
 ```
 
 By performing case analysis we get access to the resulting list
@@ -154,17 +154,16 @@ By performing case analysis we get access to the resulting list
 
 We do case analysis on the result once again so that we get access
 to the resulting list `zs`, the proof `π` that `zs` is a permutation
-of `x :: ys` and the proof `zs-sorted` that `zs` is sorted. The
-proof that `zs` is a permutation of `x :: xs` follows from
+of `x ∷ ys` and the proof `zs-sorted` that `zs` is sorted. The
+proof that `zs` is a permutation of `x ∷ xs` follows from
 transitivity of permutations and the sub-proofs `ys#xs` and `π`.
 
 ```
 ... | zs , π , zs-sorted =
   zs ,
   (#begin
-    zs      #⟨ π ⟩
-    x :: ys #⟨ #cong ys#xs ⟩
-    x :: xs
-  #end) ,
+    zs     #⟨ π ⟩
+    x ∷ ys #⟨ #cong ys#xs ⟩
+    x ∷ xs #∎) ,
   zs-sorted
 ```

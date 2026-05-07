@@ -42,14 +42,9 @@ import Chapter.Logic.Equality
 ```
 import Chapter.Fun.LessThan
 import Chapter.Fun.SortedLists
+import Chapter.Fun.ExtrinsicInsertionSort
+import Chapter.Fun.IntrinsicInsertionSort
 ```
-
-<!--
-```
--- import Chapter.Fun.ExtrinsicInsertionSort
--- import Chapter.Fun.IntrinsicInsertionSort
-```
--->
 
 ## Epilogue
 
@@ -57,37 +52,6 @@ import Chapter.Fun.SortedLists
 import Chapter.Epilogue.Emacs
 import Chapter.Epilogue.Symbols
 ```
-
-<!--
-```
--- import Chapter.Fun.RedBlackTree
--- import Chapter.Fun.RegularExpressions
--- import Chapter.Fun.Division
--- import Chapter.Fun.QuickSort
-```
-
-## Appendix: mini Agda library
-
-```
--- import Library.Bool
--- import Library.Equality
--- import Library.Equality.Reasoning
--- import Library.Fun
--- import Library.LessThan
--- import Library.LessThan.Alternative
--- import Library.LessThan.Reasoning
--- import Library.List
--- import Library.List.Permutation
--- import Library.List.Properties
--- import Library.List.Sorted
--- import Library.Logic
--- import Library.Logic.Laws
--- import Library.Nat
--- import Library.Nat.Properties
--- import Library.WellFounded
-```
-
--->
 
 ## References
 
